@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/sirupsen/logrus"
-	//"strconv"
+	"strconv"
 )
 
 // Ready is ran when the bot is ready
@@ -11,13 +11,9 @@ func Ready(s *discordgo.Session, event *discordgo.Ready) {
 
 	logrus.Info("mudcord ready")
 
-	// guilds, err := s.UserGuilds(100, "", "")
-	// if err != nil {
-	// 	guilds = []*discordgo.UserGuild{}
-	// 	logrus.Warn(err)
-	// }
+	guilds := len(s.State.Guilds)
 
-	s.UpdateStatus(0, "in the dungeons")
+	s.UpdateStatus(0, "in the dungeon on "+strconv.Itoa(guilds)+" servers")
 
 }
 
