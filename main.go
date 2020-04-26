@@ -15,7 +15,7 @@ import (
 var Token string = os.Getenv("MUDCORD_TOKEN")
 
 // Users stores all the information about users
-var Users map[string]map[string]string
+var Users map[string]User
 
 func main() {
 
