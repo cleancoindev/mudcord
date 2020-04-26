@@ -18,11 +18,12 @@ func CheckFatal(err error) {
 	}
 }
 
+// Serializer periodically serializes files
 func Serializer() {
 	for {
-		b, err := json.Marshal(Data)
+		b, err := json.Marshal(Users)
 		CheckFatal(err)
-		ioutil.WriteFile("data.json", b, 0644)
+		ioutil.WriteFile("users.json", b, 0644)
 		time.Sleep(10 * time.Second)
 	}
 }

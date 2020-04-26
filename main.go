@@ -14,15 +14,15 @@ import (
 // Token is the bot's authentication token which is obtained via environment variable
 var Token string = os.Getenv("MUDCORD_TOKEN")
 
-// Data stores all the information
-var Data map[string]map[string]string
+// Users stores all the information about users
+var Users map[string]map[string]string
 
 func main() {
 
 	// Deserialize our data
-	b, err := ioutil.ReadFile("data.json")
+	b, err := ioutil.ReadFile("users.json")
 	CheckFatal(err)
-	err = json.Unmarshal(b, &Data)
+	err = json.Unmarshal(b, &Users)
 	CheckFatal(err)
 
 	go Serializer()
