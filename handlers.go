@@ -1,9 +1,11 @@
 package main
 
 import (
+	"strconv"
+	"strings"
+
 	"github.com/bwmarrin/discordgo"
 	"github.com/sirupsen/logrus"
-	"strconv"
 )
 
 // Ready is ran when the bot is ready
@@ -25,9 +27,11 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
-	switch m.Content {
+	switch strings.Split(m.Content, " ")[0] {
 	case ".ping":
 		CommandPing(s, m)
+	case ".start":
+		CommandStart(s, m)
 	}
 
 }

@@ -1,17 +1,31 @@
 package main
 
 import (
-	"github.com/bwmarrin/discordgo"
-	"github.com/sirupsen/logrus"
+	"encoding/json"
+	"io/ioutil"
 	"os"
 	"os/signal"
 	"syscall"
+
+	"github.com/bwmarrin/discordgo"
+	"github.com/sirupsen/logrus"
 )
 
 // Token is the bot's authentication token which is obtained via environment variable
 var Token string = os.Getenv("MUDCORD_TOKEN")
 
+// Data stores all the information
+var Data map[string]map[string]string
+
 func main() {
+
+	// Deserialize our data
+	b, err := ioutil.ReadFile("data.json")
+	CheckFatal(err)
+	err = json.Unmarshal(b, &Data)
+	CheckFatal(err)
+
+	go Serializer()
 
 	// Make bot
 	bot, err := discordgo.New("Bot " + Token)
