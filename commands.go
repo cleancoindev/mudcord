@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/bwmarrin/discordgo"
+	"strconv"
 )
 
 // CommandPing is just a basic ping command
@@ -16,7 +17,7 @@ func CommandStart(s *discordgo.Session, m *discordgo.MessageCreate) {
 	} else {
 		//args := strings.Split(m.Content, " ")[1:]
 		s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" starting your journey")
-		Users[m.Author.ID] = User{Level: 1, XP: 0, HP: 20, Room: RoomSpawn, Hat: HatNone, Inv: []Item{}}
+		Users[m.Author.ID] = User{Level: 1, XP: 0, HP: 20, Gold: 0, Room: RoomSpawn, Hat: HatNone, Inv: []Item{}}
 	}
 }
 
@@ -34,7 +35,25 @@ func CommandDelete(s *discordgo.Session, m *discordgo.MessageCreate) {
 func CommandOps(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if CheckStarted(m.Author.ID) {
 		room := Users[m.Author.ID].Room
-		embed := discordgo.MessageEmbed{Title: room.Display, Author: &discordgo.MessageEmbedAuthor{Name: m.Author.Username, IconURL: m.Author.AvatarURL("")}}
+
+		var fields []*discordgo.MessageEmbedField
+		roomsValue := "run `.go #` to travel\n"
+		for i, v := range room.Rooms {
+			roomsValue += "**" + strconv.Itoa(i+1) + ".**\t" + Rooms[v].Display + "\n"
+		}
+		fields = append(fields, &discordgo.MessageEmbedField{Name: "Rooms", Value: roomsValue, Inline: false})
+		actionsValue := "run `.act #` to act\n"
+		for i, v := range room.Actions {
+			roomsValue += "**" + strconv.Itoa(i+1) + ".**\t" + v.Display + "\n"
+		}
+		fields = append(fields, &discordgo.MessageEmbedField{Name: "Actions", Value: actionsValue, Inline: false})
+		npcsValue := "run `.talk #` to talk\n"
+		for i, v := range room.NPCs {
+			roomsValue += "**" + strconv.Itoa(i+1) + ".**\t" + v.Name + "\n"
+		}
+		fields = append(fields, &discordgo.MessageEmbedField{Name: "NPCs", Value: npcsValue, Inline: false})
+
+		embed := discordgo.MessageEmbed{Title: room.Display, Color: 16711680, Fields: fields, Author: &discordgo.MessageEmbedAuthor{Name: m.Author.Username, IconURL: m.Author.AvatarURL("")}}
 		s.ChannelMessageSendEmbed(m.ChannelID, &embed)
 	} else {
 		NoneDialog(s, m)

@@ -47,6 +47,7 @@ type User struct {
 	Level int
 	XP    int
 	HP    int
+	Gold  int
 	Room  Room
 	Hat   Item
 	Inv   []Item
