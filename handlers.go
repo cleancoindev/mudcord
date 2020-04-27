@@ -36,6 +36,8 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		CommandDelete(s, m)
 	case ".ops":
 		CommandOps(s, m)
+	case ".go":
+		CommandGo(s, m)
 	}
 
 }
