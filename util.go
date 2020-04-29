@@ -48,7 +48,10 @@ type User struct {
 	XP    int
 	HP    int
 	Gold  int
-	Room  Room
-	Hat   Item
-	Inv   []Item
+	Room  string
+	Hat   string
+	Inv   []string
 }
+
+// Colors contains color names and their hex value in decimal (for use in embeds)
+var Colors map[string]int = map[string]int{"red": 13382400, "blue": 26316, "green": 52326, "grey": 6710886, "black": 1118481, "brown": 16772326}
