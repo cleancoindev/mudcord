@@ -20,10 +20,18 @@ func CheckFatal(err error) {
 // Serializer periodically serializes files
 func Serializer() {
 	for {
+		// Serialize users
 		b, err := json.MarshalIndent(Users, "", "\t")
 		CheckFatal(err)
-		logrus.Info("serializing data sized ", len(b), " bytes")
+		logrus.Info("serializing user data sized ", len(b), " bytes")
 		ioutil.WriteFile("users.json", b, 0644)
+
+		// Serialize servers
+		sb, err := json.MarshalIndent(Servers, "", "\t")
+		CheckFatal(err)
+		logrus.Info("serializing server data sized ", len(sb), " bytes")
+		ioutil.WriteFile("servers.json", sb, 0644)
+
 		time.Sleep(10 * time.Second)
 	}
 }
@@ -51,6 +59,11 @@ type User struct {
 	Room  string
 	Hat   string
 	Inv   []string
+}
+
+// Server represents a server
+type Server struct {
+	Prefix string
 }
 
 // Colors contains color names and their hex value in decimal (for use in embeds)

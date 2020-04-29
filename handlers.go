@@ -27,17 +27,28 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
+	// Check if the server is not is Servers and add it
+	_, exists := Servers[m.GuildID]
+	if !exists {
+		Servers[m.GuildID] = &Server{Prefix: "."}
+
+	}
+
+	prefix := Servers[m.GuildID].Prefix
+
 	switch strings.Split(m.Content, " ")[0] {
-	case ".ping":
+	case prefix + "ping":
 		CommandPing(s, m)
-	case ".start":
+	case prefix + "start":
 		CommandStart(s, m)
-	case ".delete":
+	case prefix + "delete":
 		CommandDelete(s, m)
-	case ".ops":
+	case prefix + "ops":
 		CommandOps(s, m)
-	case ".go":
+	case prefix + "go":
 		CommandGo(s, m)
+	case prefix + "prefix":
+		CommandPrefix(s, m)
 	}
 
 }

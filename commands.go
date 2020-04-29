@@ -16,7 +16,7 @@ func CommandStart(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	// Ensure command author has not started their journey
 	if CheckStarted(m.Author.ID) {
-		s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" you have already started your journey, run `.delete` to delete your character")
+		s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" you have already started your journey, run `delete` to delete your character")
 		return
 	}
 
@@ -36,7 +36,7 @@ func CommandDelete(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	// Delete the authors info from the Users map
 	delete(Users, m.Author.ID)
-	s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" successfully deleted your character, run `.start` to start a new one")
+	s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" successfully deleted your character, run `start` to start a new one")
 }
 
 // CommandOps is used display options per room
@@ -53,7 +53,7 @@ func CommandOps(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	// Initialize fields slice
 	var fields []*discordgo.MessageEmbedField
-	roomsValue := "run `.go #` to travel\n"
+	roomsValue := "run `go #` to travel\n"
 
 	// Iterate all rooms linked to by the current one and add them to the room field
 	for i, v := range room.Rooms {
@@ -63,7 +63,7 @@ func CommandOps(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	// If the room has actions, iterate them and add them as a field
 	if len(room.Actions) > 0 {
-		actionsValue := "run `.act #` to act\n"
+		actionsValue := "run `act #` to act\n"
 		for i, v := range room.Actions {
 			roomsValue += "**" + strconv.Itoa(i+1) + ".**\t" + v.Display + "\n"
 		}
@@ -72,7 +72,7 @@ func CommandOps(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	// If the room has npcs, iterate them and add them as a field
 	if len(room.NPCs) > 0 {
-		npcsValue := "run `.talk #` to talk\n"
+		npcsValue := "run `talk #` to talk\n"
 		for i, v := range room.NPCs {
 			roomsValue += "**" + strconv.Itoa(i+1) + ".**\t" + v.Name + "\n"
 		}
@@ -111,4 +111,29 @@ func CommandGo(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 	s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" traveling to "+Rooms[room.Rooms[num]].Display)
 	Users[m.Author.ID].Room = room.Rooms[num]
+}
+
+// CommandPrefix changes the bots prefix if you have the permission
+func CommandPrefix(s *discordgo.Session, m *discordgo.MessageCreate) {
+
+	// Check user permission
+	server, err := s.Guild(m.GuildID)
+	if err != nil {
+		return
+	}
+	if m.Author.ID != server.OwnerID {
+		s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" only the owner of the server can change the prefix")
+		return
+	}
+
+	// Get the new prefix and set it
+	contentSplit := strings.Split(m.Content, " ")
+	if len(contentSplit) <= 1 {
+		s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" no prefix provided")
+		return
+	}
+	newPrefix := contentSplit[1]
+	Servers[m.GuildID].Prefix = newPrefix
+	s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" set the prefix to "+newPrefix)
+
 }

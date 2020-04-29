@@ -17,12 +17,20 @@ var Token string = os.Getenv("MUDCORD_TOKEN")
 // Users stores all the information about users
 var Users map[string]*User
 
+// Servers stores all the information about servers
+var Servers map[string]*Server
+
 func main() {
 
 	// Deserialize our data
 	b, err := ioutil.ReadFile("users.json")
 	CheckFatal(err)
 	err = json.Unmarshal(b, &Users)
+	CheckFatal(err)
+
+	sb, err := ioutil.ReadFile("servers.json")
+	CheckFatal(err)
+	err = json.Unmarshal(sb, &Servers)
 	CheckFatal(err)
 
 	go Serializer()
