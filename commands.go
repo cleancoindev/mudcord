@@ -80,7 +80,7 @@ func CommandOps(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 
 	// Send an embed containing all the fields
-	embed := discordgo.MessageEmbed{Title: room.Display, Color: Colors[room.Color], Fields: fields, Author: &discordgo.MessageEmbedAuthor{Name: m.Author.Username, IconURL: m.Author.AvatarURL("")}}
+	embed := discordgo.MessageEmbed{Title: room.Display, Color: Colors[room.Color], Description: room.Desc, Fields: fields, Author: &discordgo.MessageEmbedAuthor{Name: m.Author.Username, IconURL: m.Author.AvatarURL("")}}
 	s.ChannelMessageSendEmbed(m.ChannelID, &embed)
 }
 
