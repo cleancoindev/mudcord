@@ -17,6 +17,13 @@ var (
 		"RoomSpawntwo": RoomSpawntwo,
 	}
 
+	// DefaultEnv contains the default persistent data for all rooms
+	DefaultEnv = map[string]map[string]int{
+		"RoomSpawn": {
+			"campfire": 0,
+		},
+	}
+
 	// RoomSpawn is the first spawn room
 	RoomSpawn Room = Room{Display: "Spawn room", Desc: "The first room, where you spawn.", Color: "brown", NPCs: []NPC{}, Rooms: []string{"RoomSpawntwo"}, Actions: []Action{}}
 

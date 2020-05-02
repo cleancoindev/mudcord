@@ -46,6 +46,8 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		CommandOps(s, m)
 	case prefix + "go":
 		CommandGo(s, m)
+	case prefix + "act":
+		CommandAct(s, m)
 	case prefix + "prefix":
 		CommandPrefix(s, m)
 	}

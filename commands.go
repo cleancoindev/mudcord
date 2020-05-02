@@ -105,12 +105,40 @@ func CommandGo(s *discordgo.Session, m *discordgo.MessageCreate) {
 	num--
 
 	// return if room number does not exist and change player room
-	if num <= -1 && len(room.Rooms) <= num {
+	if num <= -1 || len(room.Rooms) <= num {
 		s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" that room does not exist")
 		return
 	}
 	s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" traveling to "+Rooms[room.Rooms[num]].Display)
 	Users[m.Author.ID].Room = room.Rooms[num]
+}
+
+// CommandAct is used to do an action
+func CommandAct(s *discordgo.Session, m *discordgo.MessageCreate) {
+
+	// return and send message if character is not started
+	if !CheckStarted(m.Author.ID) {
+		NoneDialog(s, m)
+		return
+	}
+
+	// Get the players current room
+	room := Rooms[Users[m.Author.ID].Room]
+
+	// Get action number from message and return if it is not a number
+	num, err := strconv.Atoi(strings.Split(m.Content, " ")[len(strings.Split(m.Content, " "))-1:][0])
+	if err != nil {
+		s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" that action does not exist")
+		return
+	}
+	num--
+
+	// return if action number does not exist
+	if num <= -1 || len(room.Actions) <= num {
+		s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" that action does not exist")
+		return
+	}
+	room.Actions[num].Fn(s, m)
 }
 
 // CommandPrefix changes the bots prefix if you have the permission
