@@ -31,7 +31,6 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	_, exists := Servers[m.GuildID]
 	if !exists {
 		Servers[m.GuildID] = &Server{Prefix: "."}
-
 	}
 
 	prefix := Servers[m.GuildID].Prefix

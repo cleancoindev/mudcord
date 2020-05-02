@@ -119,6 +119,7 @@ func CommandPrefix(s *discordgo.Session, m *discordgo.MessageCreate) {
 	// Check user permission
 	server, err := s.Guild(m.GuildID)
 	if err != nil {
+		s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" you cannot change the prefix in a direct message")
 		return
 	}
 	if m.Author.ID != server.OwnerID {
