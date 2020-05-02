@@ -37,19 +37,19 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	switch strings.Split(m.Content, " ")[0] {
 	case prefix + "ping":
-		CommandPing(s, m)
+		go CommandPing(s, m)
 	case prefix + "start":
-		CommandStart(s, m)
+		go CommandStart(s, m)
 	case prefix + "delete":
-		CommandDelete(s, m)
+		go CommandDelete(s, m)
 	case prefix + "ops":
-		CommandOps(s, m)
+		go CommandOps(s, m)
 	case prefix + "go":
-		CommandGo(s, m)
+		go CommandGo(s, m)
 	case prefix + "act":
-		CommandAct(s, m)
+		go CommandAct(s, m)
 	case prefix + "prefix":
-		CommandPrefix(s, m)
+		go CommandPrefix(s, m)
 	}
 
 }
