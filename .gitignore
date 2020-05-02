@@ -3,6 +3,7 @@ mudcord
 tags
 servers.json
 users.json
+env.json
 *.exe
 *.exe~
 *.dll

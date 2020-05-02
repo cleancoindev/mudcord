@@ -20,6 +20,9 @@ var Users map[string]*User
 // Servers stores all the information about servers
 var Servers map[string]*Server
 
+// Env stores all the persistent information about rooms
+var Env map[string]map[string]int
+
 func main() {
 
 	// Deserialize our data
@@ -33,6 +36,16 @@ func main() {
 	err = json.Unmarshal(sb, &Servers)
 	CheckFatal(err)
 
+	if _, err := os.Stat("env.json"); os.IsNotExist(err) {
+		Env = DefaultEnv
+	} else {
+		eb, err := ioutil.ReadFile("env.json")
+		CheckFatal(err)
+		err = json.Unmarshal(eb, &Env)
+		CheckFatal(err)
+	}
+
+	// Start serialization goroutine
 	go Serializer()
 
 	// Make bot
