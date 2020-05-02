@@ -1,2 +1,2 @@
 # mudcord
-multi user dungeon in discord
+A [multi user dungeon](https://en.wikipedia.org/wiki/MUD) in Discord.
