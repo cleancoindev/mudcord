@@ -21,7 +21,7 @@ var Users map[string]*User
 var Servers map[string]*Server
 
 // Env stores all the persistent information about rooms
-var Env map[string]map[string]int
+var Env map[string]int
 
 func main() {
 
