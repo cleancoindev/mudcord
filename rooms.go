@@ -28,5 +28,5 @@ var (
 	RoomSpawn Room = Room{Display: "Spawn room", Desc: "The first room, where you spawn.", Color: "brown", NPCs: []NPC{}, Rooms: []string{"RoomSpawntwo"}, Actions: []Action{}}
 
 	// RoomSpawntwo is the first spawn room
-	RoomSpawntwo Room = Room{Display: "Spawn room 2", Desc: "The second room, where you spawn.", Color: "grey", NPCs: []NPC{}, Rooms: []string{"RoomSpawn", "RoomSpawntwo"}, Actions: []Action{}}
+	RoomSpawntwo Room = Room{Display: "Spawn room 2", Desc: "The second room, where you spawn.", Color: "black", NPCs: []NPC{}, Rooms: []string{"RoomSpawn", "RoomSpawntwo"}, Actions: []Action{}}
 )

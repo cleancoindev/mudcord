@@ -10,7 +10,7 @@ import (
 )
 
 // Colors contains color names and their hex value in decimal (for use in embeds)
-var Colors map[string]int = map[string]int{"red": 13382400, "blue": 26316, "green": 52326, "grey": 6710886, "black": 1118481, "brown": 16772326}
+var Colors map[string]int = map[string]int{"red": 13382400, "blue": 26316, "green": 52326, "grey": 6710886, "black": 1118481, "brown": 9127187}
 
 // CheckFatal checks if there is a fatal error, and exits accordingly
 func CheckFatal(err error) {
