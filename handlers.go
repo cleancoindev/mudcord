@@ -36,18 +36,26 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	prefix := Servers[m.GuildID].Prefix
 
 	switch strings.Split(m.Content, " ")[0] {
-	case prefix + "ping":
-		go CommandPing(s, m)
-	case prefix + "start":
-		go CommandStart(s, m)
-	case prefix + "delete":
-		go CommandDelete(s, m)
+
+	// Room commands
 	case prefix + "ops":
 		go CommandOps(s, m)
 	case prefix + "go":
 		go CommandGo(s, m)
 	case prefix + "act":
 		go CommandAct(s, m)
+	case prefix + "talk":
+		go CommandTalk(s, m)
+
+	// Character commands
+	case prefix + "start":
+		go CommandStart(s, m)
+	case prefix + "delete":
+		go CommandDelete(s, m)
+
+	// Utility commands
+	case prefix + "ping":
+		go CommandPing(s, m)
 	case prefix + "prefix":
 		go CommandPrefix(s, m)
 	}

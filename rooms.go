@@ -24,8 +24,8 @@ var (
 	}
 
 	// RoomSpawn is the first spawn room
-	RoomSpawn Room = Room{Into: "", Display: "Spawn room", Desc: "The first room, where you spawn.", Color: "brown", NPCs: []NPC{}, Rooms: []string{"RoomSpawntwo"}, Actions: []Action{}}
+	RoomSpawn Room = Room{Into: "You enter a familiar room (spawn)", Display: "Spawn room", Desc: "The first room, where you spawn.", Color: "brown", NPCs: []NPC{NPCKris}, Rooms: []string{"RoomSpawntwo"}, Actions: []Action{}}
 
 	// RoomSpawntwo is the first spawn room
-	RoomSpawntwo Room = Room{Into: "", Display: "Spawn room 2", Desc: "The second room, where you spawn.", Color: "black", NPCs: []NPC{}, Rooms: []string{"RoomSpawn", "RoomSpawntwo"}, Actions: []Action{}}
+	RoomSpawntwo Room = Room{Into: "goint to two", Display: "Spawn room 2", Desc: "The second room, where you spawn.", Color: "black", NPCs: []NPC{}, Rooms: []string{"RoomSpawn", "RoomSpawntwo"}, Actions: []Action{}}
 )

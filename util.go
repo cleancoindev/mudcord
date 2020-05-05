@@ -5,6 +5,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/sirupsen/logrus"
 	"io/ioutil"
+	"math/rand"
 	"os"
 	"time"
 )
@@ -54,6 +55,12 @@ func CheckStarted(id string) bool {
 // NoneDialog is generic text to print if a user deoes not have a character
 func NoneDialog(s *discordgo.Session, m *discordgo.MessageCreate) {
 	s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" you do not have a character, run `.start` to start your journey")
+}
+
+// DefaultSpeak returns a random dialog of an NPC
+func DefaultSpeak(self NPC) string {
+	rand.Seed(time.Now().Unix())
+	return self.Dialog[rand.Intn(len(self.Dialog))]
 }
 
 // User represents a character
