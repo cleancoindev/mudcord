@@ -109,7 +109,7 @@ func CommandGo(s *discordgo.Session, m *discordgo.MessageCreate) {
 		s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" that room does not exist")
 		return
 	}
-	s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" traveling to "+Rooms[room.Rooms[num]].Display)
+	s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" "+Rooms[room.Rooms[num]].Into)
 	Users[m.Author.ID].Room = room.Rooms[num]
 }
 
