@@ -192,13 +192,14 @@ func CommandStatus(s *discordgo.Session, m *discordgo.MessageCreate) {
 	room := Rooms[user.Room]
 
 	// Make the fields
-	var fields []*discordgo.MessageEmbedField
-	fields = append(fields, &discordgo.MessageEmbedField{Name: "Location", Value: Rooms[user.Room].Display, Inline: false})
-	fields = append(fields, &discordgo.MessageEmbedField{Name: "Level", Value: strconv.Itoa(user.Level), Inline: true})
-	fields = append(fields, &discordgo.MessageEmbedField{Name: "XP", Value: strconv.Itoa(user.XP), Inline: true})
-	fields = append(fields, &discordgo.MessageEmbedField{Name: "HP", Value: strconv.Itoa(user.HP[0]) + "/" + strconv.Itoa(user.HP[1]), Inline: true})
-	fields = append(fields, &discordgo.MessageEmbedField{Name: "Gold", Value: strconv.Itoa(user.Gold), Inline: true})
-	fields = append(fields, &discordgo.MessageEmbedField{Name: "Items", Value: strconv.Itoa(GetInvCount(user)), Inline: true})
+	fields := []*discordgo.MessageEmbedField{
+		{Name: "Location", Value: Rooms[user.Room].Display, Inline: false},
+		{Name: "Level", Value: strconv.Itoa(user.Level), Inline: true},
+		{Name: "XP", Value: strconv.Itoa(user.XP), Inline: true},
+		{Name: "HP", Value: strconv.Itoa(user.HP[0]) + "/" + strconv.Itoa(user.HP[1]), Inline: true},
+		{Name: "Gold", Value: strconv.Itoa(user.Gold), Inline: true},
+		{Name: "Items", Value: strconv.Itoa(GetInvCount(user)), Inline: true},
+	}
 
 	embed := discordgo.MessageEmbed{
 		Title:  "Status",
@@ -221,6 +222,11 @@ func CommandInv(s *discordgo.Session, m *discordgo.MessageCreate) {
 	// Get the current user and room
 	user := Users[m.Author.ID]
 	room := Rooms[user.Room]
+
+	if len(user.Inv) < 1 {
+		s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" you have no items in your inventory")
+		return
+	}
 
 	// Get the needed amount of pages
 	// Sweet, sweet, pagination /s
@@ -275,32 +281,51 @@ func CommandInv(s *discordgo.Session, m *discordgo.MessageCreate) {
 }
 
 // CommandItem gives more info about an item
-//func CommandItem(s *discordgo.Session, m *discordgo.MessageCreate) {
+func CommandItem(s *discordgo.Session, m *discordgo.MessageCreate) {
 
-//	// return and send message if character is not started
-//	if !CheckStarted(m.Author.ID) {
-//		NoneDialog(s, m)
-//		return
-//	}
+	// return and send message if character is not started
+	if !CheckStarted(m.Author.ID) {
+		NoneDialog(s, m)
+		return
+	}
 
-//	user := Users[m.Author.ID]
+	user := Users[m.Author.ID]
+	room := Rooms[user.Room]
 
-//	// Get item number from message and return if it is not a number
-//	num, err := strconv.Atoi(strings.Split(m.Content, " ")[len(strings.Split(m.Content, " "))-1:][0])
-//	if err != nil {
-//		s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" that item does not exist")
-//		return
-//	}
-//	num--
+	// Get item number from message and return if it is not a number
+	num, err := strconv.Atoi(strings.Split(m.Content, " ")[len(strings.Split(m.Content, " "))-1:][0])
+	if err != nil {
+		s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" that item does not exist")
+		return
+	}
+	num--
 
-//	// return if item number does not exist
-//	if num <= -1 || len(user.Inv) <= num {
-//		s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" that item does not exist")
-//		return
-//	}
+	// return if item number does not exist
+	if num <= -1 || len(user.Inv) <= num {
+		s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" that item does not exist")
+		return
+	}
 
-//	//s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" **"+room.NPCs[num].Name+":** "+room.NPCs[num].Speak(room.NPCs[num]))
-//}
+	// Make the fields
+	item := Items[user.Inv[num].Item]
+
+	fields := []*discordgo.MessageEmbedField{
+		{Name: "Type", Value: item.Type, Inline: true},
+		{Name: "Usable", Value: strconv.FormatBool(item.Usable), Inline: true},
+		{Name: "Amount", Value: strconv.Itoa(user.Inv[num].Quan), Inline: true},
+	}
+
+	// Collect and send the data
+	embed := discordgo.MessageEmbed{
+		Title:       item.Display,
+		Description: item.Desc,
+		Color:       Colors[room.Color],
+		Fields:      fields,
+		Author:      &discordgo.MessageEmbedAuthor{Name: m.Author.Username, IconURL: m.Author.AvatarURL("")},
+	}
+
+	s.ChannelMessageSendEmbed(m.ChannelID, &embed)
+}
 
 // CommandUse uses an item
 func CommandUse(s *discordgo.Session, m *discordgo.MessageCreate) {
