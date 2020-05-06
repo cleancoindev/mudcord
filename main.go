@@ -46,7 +46,8 @@ func main() {
 	}
 
 	// Start serialization goroutine
-	go Serializer()
+	serQuit := make(chan bool)
+	go Serializer(serQuit)
 
 	// Make bot
 	bot, err := discordgo.New("Bot " + Token)
@@ -65,5 +66,8 @@ func main() {
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
 	<-sc
+
+	serQuit <- true
+	logrus.Info("Shutting down")
 
 }

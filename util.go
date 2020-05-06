@@ -21,25 +21,41 @@ func CheckFatal(err error) {
 	}
 }
 
+func writeJSON() {
+	b, err := json.MarshalIndent(Users, "", "  ")
+	CheckFatal(err)
+	logrus.Info("serializing user data sized ", len(b), " bytes")
+	ioutil.WriteFile("users.json", b, 0644)
+
+	sb, err := json.MarshalIndent(Servers, "", "  ")
+	CheckFatal(err)
+	logrus.Info("serializing server data sized ", len(sb), " bytes")
+	ioutil.WriteFile("servers.json", sb, 0644)
+
+	eb, err := json.MarshalIndent(Env, "", "  ")
+	CheckFatal(err)
+	logrus.Info("serializing environment data sized ", len(eb), " bytes")
+	ioutil.WriteFile("env.json", eb, 0644)
+}
+
 // Serializer periodically serializes files
-func Serializer() {
+func Serializer(serQuit chan bool) {
+	var rest int
 	for {
-		b, err := json.MarshalIndent(Users, "", "  ")
-		CheckFatal(err)
-		logrus.Info("serializing user data sized ", len(b), " bytes")
-		ioutil.WriteFile("users.json", b, 0644)
-
-		sb, err := json.MarshalIndent(Servers, "", "  ")
-		CheckFatal(err)
-		logrus.Info("serializing server data sized ", len(sb), " bytes")
-		ioutil.WriteFile("servers.json", sb, 0644)
-
-		eb, err := json.MarshalIndent(Env, "", "  ")
-		CheckFatal(err)
-		logrus.Info("serializing environment data sized ", len(eb), " bytes")
-		ioutil.WriteFile("env.json", eb, 0644)
-
-		time.Sleep(10 * time.Second)
+		select {
+		case <-serQuit:
+			writeJSON()
+			logrus.Info("Serializer shutting down safely")
+			return
+		default:
+			if rest == 0 {
+				writeJSON()
+				rest = 10
+			} else {
+				rest--
+				time.Sleep(1 * time.Second)
+			}
+		}
 	}
 }
 
