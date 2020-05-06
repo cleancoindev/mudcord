@@ -154,7 +154,7 @@ func CommandStart(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	// Create a new character in the Users map
 	s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" starting your journey")
-	Users[m.Author.ID] = &User{Level: 1, XP: 0, HP: [2]int{20, 20}, Gold: 0, Room: "RoomSpawn", Hat: "HatNone", Inv: []ItemQuan{{Item: "ItemCanteen", Quan: 2}}}
+	Users[m.Author.ID] = &User{Level: 1, XP: 0, HP: [2]int{20, 20}, Gold: 0, Room: "RoomSpawn", Hat: "HatNone", Inv: []ItemQuan{{Item: "ItemCanteen", Quan: 1}}}
 }
 
 // CommandDelete is used to delete a players data
@@ -210,8 +210,6 @@ func CommandInv(s *discordgo.Session, m *discordgo.MessageCreate) {
 	user := Users[m.Author.ID]
 	room := Rooms[user.Room]
 
-	var fields []*discordgo.MessageEmbedField
-
 	// Get the needed amount of pages
 	// Sweet, sweet, pagination /s
 	var pageCount int
@@ -247,12 +245,20 @@ func CommandInv(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 
 	// Get the slice of items in specific page
-	for _, val := range pages[num] {
-		fields = append(fields, &discordgo.MessageEmbedField{Name: Items[val.Item].Display + " (" + strconv.Itoa(val.Quan) + ")", Value: Items[val.Item].Desc, Inline: false})
-		print("d")
+	var items string
+	for i, val := range pages[num] {
+		items += "**" + strconv.Itoa(num*7+i-6) + ".** " + Items[val.Item].Display + " (" + strconv.Itoa(val.Quan) + ")\n"
 	}
 
-	embed := discordgo.MessageEmbed{Title: "Inventory", Color: Colors[room.Color], Footer: &discordgo.MessageEmbedFooter{Text: strconv.Itoa(num) + "/" + strconv.Itoa(pageCount) + " pages"}, Description: "Total items: " + strconv.Itoa(GetInvCount(user)), Fields: fields, Author: &discordgo.MessageEmbedAuthor{Name: m.Author.Username, IconURL: m.Author.AvatarURL("")}}
+	// Collect and send the data
+	embed := discordgo.MessageEmbed{
+		Title:  "Inventory",
+		Color:  Colors[room.Color],
+		Footer: &discordgo.MessageEmbedFooter{Text: strconv.Itoa(num) + "/" + strconv.Itoa(pageCount) + " pages"},
+		Fields: []*discordgo.MessageEmbedField{&discordgo.MessageEmbedField{Name: strconv.Itoa(GetInvCount(user)) + " total items", Value: items, Inline: false}},
+		Author: &discordgo.MessageEmbedAuthor{Name: m.Author.Username, IconURL: m.Author.AvatarURL("")},
+	}
+
 	s.ChannelMessageSendEmbed(m.ChannelID, &embed)
 }
 
