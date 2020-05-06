@@ -63,6 +63,11 @@ func DefaultSpeak(self NPC) string {
 	return self.Dialog[rand.Intn(len(self.Dialog))]
 }
 
+// NoUse is for items that cnnot be used
+func NoUse(item Item, s *discordgo.Session, m *discordgo.MessageCreate) {
+	s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" "+item.Display+" cannot be used")
+}
+
 // User represents a character
 type User struct {
 	Level int

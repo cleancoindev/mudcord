@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/bwmarrin/discordgo"
+	"math"
 	"strconv"
 	"strings"
 	"time"
@@ -170,7 +171,7 @@ func CommandDelete(s *discordgo.Session, m *discordgo.MessageCreate) {
 	s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" successfully deleted your character, run `start` to start a new one")
 }
 
-// CommandStatus is used to start a player out
+// CommandStatus is used to see a players hp, level, gold, etc
 func CommandStatus(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	// Ensure command author has not started their journey
@@ -193,6 +194,65 @@ func CommandStatus(s *discordgo.Session, m *discordgo.MessageCreate) {
 	fields = append(fields, &discordgo.MessageEmbedField{Name: "Items", Value: strconv.Itoa(len(user.Inv)), Inline: true})
 
 	embed := discordgo.MessageEmbed{Title: "Status", Color: Colors[room.Color], Description: "", Fields: fields, Author: &discordgo.MessageEmbedAuthor{Name: m.Author.Username, IconURL: m.Author.AvatarURL("")}}
+	s.ChannelMessageSendEmbed(m.ChannelID, &embed)
+}
+
+// CommandInv is used to display the contents of a users inventory
+func CommandInv(s *discordgo.Session, m *discordgo.MessageCreate) {
+
+	// Ensure command author has not started their journey
+	if !CheckStarted(m.Author.ID) {
+		NoneDialog(s, m)
+		return
+	}
+
+	// Get the current user and room
+	user := Users[m.Author.ID]
+	room := Rooms[user.Room]
+
+	var fields []*discordgo.MessageEmbedField
+
+	// Get the needed amount of pages
+	// Sweet, sweet, pagination /s
+	var pageCount int
+	if len(user.Inv)%7 != 0 {
+		pageCount = int(math.Round(float64(len(user.Inv)) / 7))
+		if float64(pageCount) < float64(len(user.Inv))/7.0 {
+			pageCount++
+		}
+	} else {
+		pageCount = len(user.Inv) / 7
+	}
+
+	// Make a map of every page
+	var pages = make(map[int][]string)
+	for i := 1; i <= pageCount; i++ {
+		upper := i + 6
+		if upper > len(user.Inv) {
+			upper = len(user.Inv)
+		}
+		pages[i] = user.Inv[i-1 : upper]
+	}
+
+	// Get page number, default 1
+	num, err := strconv.Atoi(strings.Split(m.Content, " ")[len(strings.Split(m.Content, " "))-1:][0])
+	if err != nil {
+		num = 1
+	}
+
+	// return if page number does not exist
+	if num < 1 || pageCount < num {
+		s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" that page does not exist")
+		return
+	}
+
+	// Get the slice of items in specific page
+	for _, val := range pages[num] {
+		fields = append(fields, &discordgo.MessageEmbedField{Name: Items[val].Display, Value: Items[val].Desc, Inline: false})
+		print("d")
+	}
+
+	embed := discordgo.MessageEmbed{Title: "Inventory", Color: Colors[room.Color], Footer: &discordgo.MessageEmbedFooter{Text: strconv.Itoa(num) + "/" + strconv.Itoa(pageCount) + " pages"}, Description: "Total items: "+strconv.Itoa(len(user.Inv)), Fields: fields, Author: &discordgo.MessageEmbedAuthor{Name: m.Author.Username, IconURL: m.Author.AvatarURL("")}}
 	s.ChannelMessageSendEmbed(m.ChannelID, &embed)
 }
 
