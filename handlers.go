@@ -52,6 +52,8 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		go CommandStart(s, m)
 	case prefix + "delete":
 		go CommandDelete(s, m)
+	case prefix + "status":
+		go CommandStatus(s, m)
 
 	// Utility commands
 	case prefix + "ping":

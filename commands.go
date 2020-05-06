@@ -4,6 +4,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"strconv"
 	"strings"
+	"time"
 )
 
 // Room commands
@@ -169,6 +170,32 @@ func CommandDelete(s *discordgo.Session, m *discordgo.MessageCreate) {
 	s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" successfully deleted your character, run `start` to start a new one")
 }
 
+// CommandStatus is used to start a player out
+func CommandStatus(s *discordgo.Session, m *discordgo.MessageCreate) {
+
+	// Ensure command author has not started their journey
+	if !CheckStarted(m.Author.ID) {
+		NoneDialog(s, m)
+		return
+	}
+
+	// Get the current user and room
+	user := Users[m.Author.ID]
+	room := Rooms[user.Room]
+
+	// Make the fields
+	var fields []*discordgo.MessageEmbedField
+	fields = append(fields, &discordgo.MessageEmbedField{Name: "Location", Value: Rooms[user.Room].Display, Inline: false})
+	fields = append(fields, &discordgo.MessageEmbedField{Name: "Level", Value: strconv.Itoa(user.Level), Inline: true})
+	fields = append(fields, &discordgo.MessageEmbedField{Name: "XP", Value: strconv.Itoa(user.XP), Inline: true})
+	fields = append(fields, &discordgo.MessageEmbedField{Name: "HP", Value: strconv.Itoa(user.HP[0]) + "/" + strconv.Itoa(user.HP[1]), Inline: true})
+	fields = append(fields, &discordgo.MessageEmbedField{Name: "Gold", Value: strconv.Itoa(user.Gold), Inline: true})
+	fields = append(fields, &discordgo.MessageEmbedField{Name: "Items", Value: strconv.Itoa(len(user.Inv)), Inline: true})
+
+	embed := discordgo.MessageEmbed{Title: "Status", Color: Colors[room.Color], Description: "", Fields: fields, Author: &discordgo.MessageEmbedAuthor{Name: m.Author.Username, IconURL: m.Author.AvatarURL("")}}
+	s.ChannelMessageSendEmbed(m.ChannelID, &embed)
+}
+
 // Utility commands
 
 // CommandPrefix changes the bots prefix if you have the permission
@@ -199,5 +226,10 @@ func CommandPrefix(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 // CommandPing is just a basic ping command
 func CommandPing(s *discordgo.Session, m *discordgo.MessageCreate) {
-	s.ChannelMessageSend(m.ChannelID, "pong")
+	before := time.Now()
+	message, err := s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" pong!")
+	if err == nil {
+		ms := time.Now().Sub(before).Milliseconds()
+		s.ChannelMessageEdit(message.ChannelID, message.ID, m.Author.Mention()+" pong! **"+strconv.FormatInt(ms, 10)+"ms**")
+	}
 }
