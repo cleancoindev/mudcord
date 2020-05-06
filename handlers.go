@@ -56,6 +56,10 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		go CommandStatus(s, m)
 	case prefix + "inv":
 		go CommandInv(s, m)
+	case prefix + "item":
+		go CommandItem(s, m)
+	case prefix + "use":
+		go CommandUse(s, m)
 
 	// Utility commands
 	case prefix + "ping":

@@ -10,7 +10,7 @@ type Item struct {
 	Display string
 	Desc    string
 	Usable  bool
-	Use     func(item Item, s *discordgo.Session, m *discordgo.MessageCreate)
+	Use     func(s *discordgo.Session, m *discordgo.MessageCreate)
 }
 
 // ItemQuan represents an item string with a quantity value
@@ -27,12 +27,16 @@ var (
 		"ItemShard":   ItemShard,
 	}
 
-	// HatNone is used when a character has no hat
-	HatNone Item = Item{Type: "Hat", Display: "", Desc: "", Usable: false, Use: NoUse}
+	// Items
 
 	// ItemCanteen is a canteen
 	ItemCanteen Item = Item{Type: "Item", Display: "Canteen", Desc: "Glug glug glug", Usable: true, Use: NoUse}
 
 	// ItemShard is a simplex shard
 	ItemShard Item = Item{Type: "Item", Display: "Simplex Shard", Desc: "Shiny", Usable: false, Use: NoUse}
+
+	// Hats
+
+	// HatNone is used when a character has no hat
+	HatNone Item = Item{Type: "Hat", Display: "", Desc: "", Usable: false, Use: NoUse}
 )

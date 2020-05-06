@@ -52,11 +52,11 @@ func CommandOps(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	// Send an embed containing all the fields
 	embed := discordgo.MessageEmbed{
-	    Title: room.Display, 
-	    Color: Colors[room.Color],
-	    Description: room.Desc,
-	    Fields: fields,
-	    Author: &discordgo.MessageEmbedAuthor{Name: m.Author.Username, IconURL: m.Author.AvatarURL("")},
+		Title:       room.Display,
+		Color:       Colors[room.Color],
+		Description: room.Desc,
+		Fields:      fields,
+		Author:      &discordgo.MessageEmbedAuthor{Name: m.Author.Username, IconURL: m.Author.AvatarURL("")},
 	}
 
 	s.ChannelMessageSendEmbed(m.ChannelID, &embed)
@@ -131,7 +131,7 @@ func CommandTalk(s *discordgo.Session, m *discordgo.MessageCreate) {
 	// Get the players current room
 	room := Rooms[Users[m.Author.ID].Room]
 
-	// Get nps number from message and return if it is not a number
+	// Get npc number from message and return if it is not a number
 	num, err := strconv.Atoi(strings.Split(m.Content, " ")[len(strings.Split(m.Content, " "))-1:][0])
 	if err != nil {
 		s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" that npc does not exist")
@@ -201,10 +201,10 @@ func CommandStatus(s *discordgo.Session, m *discordgo.MessageCreate) {
 	fields = append(fields, &discordgo.MessageEmbedField{Name: "Items", Value: strconv.Itoa(GetInvCount(user)), Inline: true})
 
 	embed := discordgo.MessageEmbed{
-	    Title: "Status",
-	    Color: Colors[room.Color],
-	    Fields: fields,
-	    Author: &discordgo.MessageEmbedAuthor{Name: m.Author.Username, IconURL: m.Author.AvatarURL("")},
+		Title:  "Status",
+		Color:  Colors[room.Color],
+		Fields: fields,
+		Author: &discordgo.MessageEmbedAuthor{Name: m.Author.Username, IconURL: m.Author.AvatarURL("")},
 	}
 	s.ChannelMessageSendEmbed(m.ChannelID, &embed)
 }
@@ -272,6 +272,63 @@ func CommandInv(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 
 	s.ChannelMessageSendEmbed(m.ChannelID, &embed)
+}
+
+// CommandItem gives more info about an item
+//func CommandItem(s *discordgo.Session, m *discordgo.MessageCreate) {
+
+//	// return and send message if character is not started
+//	if !CheckStarted(m.Author.ID) {
+//		NoneDialog(s, m)
+//		return
+//	}
+
+//	user := Users[m.Author.ID]
+
+//	// Get item number from message and return if it is not a number
+//	num, err := strconv.Atoi(strings.Split(m.Content, " ")[len(strings.Split(m.Content, " "))-1:][0])
+//	if err != nil {
+//		s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" that item does not exist")
+//		return
+//	}
+//	num--
+
+//	// return if item number does not exist
+//	if num <= -1 || len(user.Inv) <= num {
+//		s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" that item does not exist")
+//		return
+//	}
+
+//	//s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" **"+room.NPCs[num].Name+":** "+room.NPCs[num].Speak(room.NPCs[num]))
+//}
+
+// CommandUse uses an item
+func CommandUse(s *discordgo.Session, m *discordgo.MessageCreate) {
+
+	// return and send message if character is not started
+	if !CheckStarted(m.Author.ID) {
+		NoneDialog(s, m)
+		return
+	}
+
+	user := Users[m.Author.ID]
+
+	// Get item number from message and return if it is not a number
+	num, err := strconv.Atoi(strings.Split(m.Content, " ")[len(strings.Split(m.Content, " "))-1:][0])
+	if err != nil {
+		s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" that item does not exist")
+		return
+	}
+	num--
+
+	// return if item number does not exist
+	if num <= -1 || len(user.Inv) <= num {
+		s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" that item does not exist")
+		return
+	}
+
+	Items[user.Inv[num].Item].Use(s, m)
+	UserRemoveItem(user, num)
 }
 
 // Utility commands

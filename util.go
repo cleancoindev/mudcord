@@ -64,8 +64,17 @@ func DefaultSpeak(self NPC) string {
 }
 
 // NoUse is for items that cannot be used
-func NoUse(item Item, s *discordgo.Session, m *discordgo.MessageCreate) {
-	s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" "+item.Display+" cannot be used")
+func NoUse(s *discordgo.Session, m *discordgo.MessageCreate) {
+	s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" that item cannot be used")
+}
+
+// UserRemoveItem will either remove an item from a users inventory or decrement the quantity
+func UserRemoveItem(user *User, index int) {
+	if user.Inv[index].Quan > 1 {
+		user.Inv[index].Quan--
+	} else {
+		user.Inv = append(user.Inv[:index], user.Inv[index+1:]...)
+	}
 }
 
 // GetInvCount gets the total number of items in a users inventory
