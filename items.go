@@ -13,6 +13,12 @@ type Item struct {
 	Use     func(item Item, s *discordgo.Session, m *discordgo.MessageCreate)
 }
 
+// ItemQuan represents an item string with a quantity value
+type ItemQuan struct {
+	Item string
+	Quan int
+}
+
 var (
 	// Items contains all items (to be stored in json nicer as strings)
 	Items map[string]Item = map[string]Item{

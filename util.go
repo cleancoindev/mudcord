@@ -68,6 +68,15 @@ func NoUse(item Item, s *discordgo.Session, m *discordgo.MessageCreate) {
 	s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" "+item.Display+" cannot be used")
 }
 
+// GetInvCount gets the total number of items in a users inventory
+func GetInvCount(user *User) int {
+	var count int
+	for _, val := range user.Inv {
+		count += val.Quan
+	}
+	return count
+}
+
 // User represents a character
 type User struct {
 	Level int
@@ -76,7 +85,7 @@ type User struct {
 	HP    [2]int
 	Room  string
 	Hat   string
-	Inv   []string
+	Inv   []ItemQuan
 }
 
 // Server represents a server
