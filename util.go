@@ -24,17 +24,17 @@ func CheckFatal(err error) {
 // Serializer periodically serializes files
 func Serializer() {
 	for {
-		b, err := json.MarshalIndent(Users, "", "\t")
+		b, err := json.MarshalIndent(Users, "", "  ")
 		CheckFatal(err)
 		logrus.Info("serializing user data sized ", len(b), " bytes")
 		ioutil.WriteFile("users.json", b, 0644)
 
-		sb, err := json.MarshalIndent(Servers, "", "\t")
+		sb, err := json.MarshalIndent(Servers, "", "  ")
 		CheckFatal(err)
 		logrus.Info("serializing server data sized ", len(sb), " bytes")
 		ioutil.WriteFile("servers.json", sb, 0644)
 
-		eb, err := json.MarshalIndent(Env, "", "\t")
+		eb, err := json.MarshalIndent(Env, "", "  ")
 		CheckFatal(err)
 		logrus.Info("serializing environment data sized ", len(eb), " bytes")
 		ioutil.WriteFile("env.json", eb, 0644)
@@ -63,7 +63,7 @@ func DefaultSpeak(self NPC) string {
 	return self.Dialog[rand.Intn(len(self.Dialog))]
 }
 
-// NoUse is for items that cnnot be used
+// NoUse is for items that cannot be used
 func NoUse(item Item, s *discordgo.Session, m *discordgo.MessageCreate) {
 	s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" "+item.Display+" cannot be used")
 }
