@@ -1,5 +1,10 @@
 package main
 
+import (
+	"math/rand"
+	"time"
+)
+
 // NPC represents a generic NPC
 type NPC struct {
 	Name   string
@@ -9,5 +14,11 @@ type NPC struct {
 
 var (
 	// NPCKris is a bro
-	NPCKris NPC = NPC{Name: "Kris", Dialog: []string{"BRUH", "HOWSTSAGRB:KHN"}, Speak: DefaultSpeak}
+	NPCKris NPC = NPC{Name: "Kris", Dialog: []string{"BRUH", "HOWSTSAGRB:KHN"}, Speak: SpeakDefault}
 )
+
+// SpeakDefault returns a random dialog of an NPC
+func SpeakDefault(self NPC) string {
+	rand.Seed(time.Now().Unix())
+	return self.Dialog[rand.Intn(len(self.Dialog))]
+}

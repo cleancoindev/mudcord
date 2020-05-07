@@ -198,7 +198,7 @@ func CommandStatus(s *discordgo.Session, m *discordgo.MessageCreate) {
 		{Name: "XP", Value: strconv.Itoa(user.XP), Inline: true},
 		{Name: "HP", Value: strconv.Itoa(user.HP[0]) + "/" + strconv.Itoa(user.HP[1]), Inline: true},
 		{Name: "Gold", Value: strconv.Itoa(user.Gold), Inline: true},
-		{Name: "Items", Value: strconv.Itoa(GetInvCount(user)), Inline: true},
+		{Name: "Items", Value: strconv.Itoa(user.InvCount()), Inline: true},
 	}
 
 	embed := discordgo.MessageEmbed{
@@ -273,7 +273,7 @@ func CommandInv(s *discordgo.Session, m *discordgo.MessageCreate) {
 		Title:  "Inventory",
 		Color:  Colors[room.Color],
 		Footer: &discordgo.MessageEmbedFooter{Text: strconv.Itoa(num) + "/" + strconv.Itoa(pageCount) + " pages"},
-		Fields: []*discordgo.MessageEmbedField{&discordgo.MessageEmbedField{Name: strconv.Itoa(GetInvCount(user)) + " total items", Value: items, Inline: false}},
+		Fields: []*discordgo.MessageEmbedField{&discordgo.MessageEmbedField{Name: strconv.Itoa(user.InvCount()) + " total items", Value: items, Inline: false}},
 		Author: &discordgo.MessageEmbedAuthor{Name: m.Author.Username, IconURL: m.Author.AvatarURL("")},
 	}
 
@@ -352,8 +352,13 @@ func CommandUse(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
-	Items[user.Inv[num].Item].Use(s, m)
-	UserRemoveItem(user, num)
+	item := Items[user.Inv[num].Item]
+
+	if !item.Usable {
+		UseNone(num, s, m)
+		return
+	}
+	item.Use(num, s, m)
 }
 
 // Utility commands
