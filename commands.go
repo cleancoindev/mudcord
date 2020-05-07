@@ -398,3 +398,39 @@ func CommandPing(s *discordgo.Session, m *discordgo.MessageCreate) {
 		s.ChannelMessageEdit(message.ChannelID, message.ID, m.Author.Mention()+" pong! **"+strconv.FormatInt(ms, 10)+"ms**")
 	}
 }
+
+// CommandAbout explains more about the bot
+func CommandAbout(s *discordgo.Session, m *discordgo.MessageCreate) {
+
+	fields := []*discordgo.MessageEmbedField{
+		{Name: "Source", Value: "mudcord is open source on [GitHub](https://github.com/tteeoo/mudcord) and licensed under the BSD license, contributions are welcome", Inline: false},
+		{Name: "Credits", Value: "<@258771223473815553> (Theo Henson) - Programmer, game design\n<@546851070224105493> (Dylan Combra) - Game design", Inline: false},
+	}
+
+	embed := discordgo.MessageEmbed{
+		Title:       "About",
+		Description: "mudcord is a text-based mmorpg in Discord that is inspired by the multi-user dungeons of old",
+		Color:       Colors["white"],
+		Fields:      fields,
+		Author:      &discordgo.MessageEmbedAuthor{Name: s.State.Ready.User.Username, IconURL: s.State.Ready.User.AvatarURL("")},
+	}
+
+	s.ChannelMessageSendEmbed(m.ChannelID, &embed)
+}
+
+// CommandHelp sends a helpful message
+// func CommandHelp(s *discordgo.Session, m *discordgo.MessageCreate) {
+
+// 	fields := []*discordgo.MessageEmbedField{
+// 		{Name: "f", Value: "f", Inline: true},
+// 	}
+
+// 	embed := discordgo.MessageEmbed{
+// 		Title:  "Help",
+// 		Color:  Colors["white"],
+// 		Fields: fields,
+// 		Author: &discordgo.MessageEmbedAuthor{Name: s.State.Ready.User.Username, IconURL: s.State.Ready.User.AvatarURL("")},
+// 	}
+
+// 	s.ChannelMessageSendEmbed(m.ChannelID, &embed)
+// }

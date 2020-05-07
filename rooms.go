@@ -20,6 +20,7 @@ var (
 		"grey":  6710886,
 		"black": 1118481,
 		"brown": 9127187,
+		"white": 16777214,
 	}
 
 	// Rooms contains all the rooms

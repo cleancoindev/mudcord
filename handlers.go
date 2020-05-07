@@ -66,6 +66,10 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		go CommandPing(s, m)
 	case prefix + "prefix":
 		go CommandPrefix(s, m)
+	case prefix + "about":
+		go CommandAbout(s, m)
+		// case prefix + "help":
+		// 	go CommandHelp(s, m)
 	}
 
 }
