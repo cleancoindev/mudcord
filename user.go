@@ -8,16 +8,29 @@ type User struct {
 	HP    [2]int
 	Room  string
 	Hat   string
-	Inv   []ItemQuan
+	Inv   []*ItemQuan
 }
 
 // RemoveItem will either remove an item from a users inventory or decrement the quantity
 func (user *User) RemoveItem(index int) {
 	if user.Inv[index].Quan > 1 {
 		user.Inv[index].Quan--
-	} else {
-		user.Inv = append(user.Inv[:index], user.Inv[index+1:]...)
+		return
 	}
+
+	user.Inv = append(user.Inv[:index], user.Inv[index+1:]...)
+}
+
+// AddItem will either add an item to a users inventory or increment the quantity
+func (user *User) AddItem(item string, quan int) {
+	for _, val := range user.Inv {
+		if val.Item == item {
+			val.Quan++
+			return
+		}
+	}
+
+	user.Inv = append(user.Inv, &ItemQuan{Item: item, Quan: quan})
 }
 
 // InvCount gets the total number of items in a users inventory
@@ -26,6 +39,7 @@ func (user *User) InvCount() int {
 	for _, val := range user.Inv {
 		count += val.Quan
 	}
+
 	return count
 }
 

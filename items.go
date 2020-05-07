@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/bwmarrin/discordgo"
+	"strconv"
 )
 
 // Item represents a generic item
@@ -23,18 +24,18 @@ type ItemQuan struct {
 var (
 	// Items contains all items (to be stored in json nicer as strings)
 	Items map[string]Item = map[string]Item{
-		"HatNone":     HatNone,
-		"ItemCanteen": ItemCanteen,
-		"ItemShard":   ItemShard,
+		"HatNone":          HatNone,
+		"ItemCanteen":      ItemCanteen,
+		"ItemEmptyCanteen": ItemEmptyCanteen,
 	}
 
 	// Items
 
 	// ItemCanteen is a canteen
-	ItemCanteen Item = Item{Type: "Item", Display: "Canteen", Desc: "A shiny container; heals one HP", Usable: true, Use: UseCanteen}
+	ItemCanteen Item = Item{Type: "Item", Display: "Canteen", Desc: "A shiny, refillable container; heals up to two HP", Usable: true, Use: UseCanteen}
 
-	// ItemShard is a simplex shard
-	ItemShard Item = Item{Type: "Item", Display: "Simplex Shard", Desc: "Shiny", Usable: false, Use: UseNone}
+	// ItemEmptyCanteen is an empty canteen
+	ItemEmptyCanteen Item = Item{Type: "Item", Display: "Empty Canteen", Desc: "A shiny, refillable container", Usable: false, Use: UseNone}
 
 	// Hats
 
@@ -53,6 +54,14 @@ func UseNone(_ int, s *discordgo.Session, m *discordgo.MessageCreate) {
 func UseCanteen(num int, s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	user := Users[m.Author.ID]
-	user.RemoveItem(num)
 
+	healed := user.Heal(2)
+	if healed == 0 {
+		s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" you are already at full health")
+		return
+	}
+
+	s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" you chug down the water inside, healing "+strconv.Itoa(healed)+" health")
+	user.RemoveItem(num)
+	user.AddItem("ItemEmptyCanteen", 1)
 }
