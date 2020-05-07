@@ -14,7 +14,11 @@ type NPC struct {
 
 var (
 	// NPCKris is a bro
-	NPCKris NPC = NPC{Name: "Kris", Dialog: []string{"BRUH", "HOWSTSAGRB:KHN"}, Speak: SpeakDefault}
+	NPCKris NPC = NPC{
+		Name:   "Captain Kris",
+		Dialog: []string{"Ahoy matey!", "Have a good time in Alkos!", "I've had this here boat for 16 years"},
+		Speak:  SpeakDefault,
+	}
 )
 
 // SpeakDefault returns a random dialog of an NPC

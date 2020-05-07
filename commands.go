@@ -160,8 +160,8 @@ func CommandStart(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 
 	// Create a new character in the Users map
-	s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" starting your journey")
-	Users[m.Author.ID] = &User{Level: 1, XP: 0, HP: [2]int{20, 20}, Gold: 0, Room: "RoomSpawn", Hat: "HatNone", Inv: []*ItemQuan{{Item: "ItemCanteen", Quan: 1}}}
+	s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" you hear the captain say 'land ho!'. You've arrived at the forgotten island of Alkos, ready to start a new journey")
+	Users[m.Author.ID] = &User{Level: 1, XP: 0, HP: [2]int{20, 20}, Gold: 0, Room: "RoomGreatMarya", Hat: "HatNone", Inv: []*ItemQuan{{Item: "ItemCanteen", Quan: 1}}}
 }
 
 // CommandDelete is used to delete a players data
