@@ -15,7 +15,7 @@ func Ready(s *discordgo.Session, event *discordgo.Ready) {
 
 	guilds := len(s.State.Guilds)
 
-	s.UpdateStatus(0, "in the dungeon on "+strconv.Itoa(guilds)+" servers")
+	s.UpdateStatus(0, "on "+strconv.Itoa(guilds)+" servers")
 
 }
 
