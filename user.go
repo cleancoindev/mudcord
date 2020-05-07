@@ -11,15 +11,6 @@ type User struct {
 	Inv   []ItemQuan
 }
 
-// CheckStarted checks if a user id has a character
-func CheckStarted(id string) bool {
-	_, exists := Users[id]
-	if exists {
-		return true
-	}
-	return false
-}
-
 // RemoveItem will either remove an item from a users inventory or decrement the quantity
 func (user *User) RemoveItem(index int) {
 	if user.Inv[index].Quan > 1 {
@@ -36,4 +27,19 @@ func (user *User) InvCount() int {
 		count += val.Quan
 	}
 	return count
+}
+
+// Heal attempts to heal the user, taking into account max hp and returns the amount healed
+func (user *User) Heal(amount int) int {
+	if user.HP[0] >= user.HP[1] {
+		return 0
+	}
+
+	if user.HP[0]+amount > user.HP[1] {
+		user.HP[0] = user.HP[1]
+		return user.HP[1] - user.HP[0]
+	}
+
+	user.HP[0] += amount
+	return amount
 }

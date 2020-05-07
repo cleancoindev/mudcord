@@ -22,6 +22,15 @@ func CheckFatal(err error) {
 	}
 }
 
+// CheckStarted checks if a user id has a character
+func CheckStarted(id string) bool {
+	_, exists := Users[id]
+	if exists {
+		return true
+	}
+	return false
+}
+
 // NoneDialog is generic text to print if a user deoes not have a character
 func NoneDialog(s *discordgo.Session, m *discordgo.MessageCreate) {
 	s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" you do not have a character, run `.start` to start your journey")
