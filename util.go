@@ -55,7 +55,7 @@ func writeJSON() {
 
 // Serializer periodically serializes files
 func Serializer(serQuit chan bool) {
-	var rest int
+	rest := 512
 	for {
 		select {
 		case <-serQuit:
@@ -65,7 +65,7 @@ func Serializer(serQuit chan bool) {
 		default:
 			if rest == 0 {
 				writeJSON()
-				rest = 10
+				rest = 2048
 			} else {
 				rest--
 				time.Sleep(1 * time.Second)
