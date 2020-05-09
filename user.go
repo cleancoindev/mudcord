@@ -2,13 +2,14 @@ package main
 
 // User represents a character
 type User struct {
-	Level int
-	XP    int
-	Gold  int
-	HP    [2]int
-	Room  string
-	Hat   string
-	Inv   []*ItemQuan
+	Level  int
+	XP     int
+	Gold   int
+	HP     [2]int
+	Combat bool
+	Room   string
+	Hat    string
+	Inv    []*ItemQuan
 }
 
 // RemoveItem will either remove an item from a users inventory or decrement the quantity

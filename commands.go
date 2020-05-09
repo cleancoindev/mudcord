@@ -310,9 +310,10 @@ func CommandItem(s *discordgo.Session, m *discordgo.MessageCreate) {
 	item := Items[user.Inv[num].Item]
 
 	fields := []*discordgo.MessageEmbedField{
-		{Name: "Type", Value: item.Type, Inline: true},
+		{Name: "Type", Value: item.Type(), Inline: true},
 		{Name: "Usable", Value: strconv.FormatBool(item.Usable), Inline: true},
 		{Name: "Amount", Value: strconv.Itoa(user.Inv[num].Quan), Inline: true},
+		{Name: "Combat usable", Value: strconv.FormatBool(item.CombatUsable), Inline: true},
 	}
 
 	// Collect and send the data
@@ -354,10 +355,6 @@ func CommandUse(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	item := Items[user.Inv[num].Item]
 
-	if !item.Usable {
-		UseNone(num, s, m)
-		return
-	}
 	item.Use(num, s, m)
 }
 

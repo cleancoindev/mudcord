@@ -6,6 +6,7 @@ type Room struct {
 	Display string
 	Desc    string
 	Color   string
+	Type    string
 	NPCs    []NPC
 	Rooms   []string
 	Actions []Action
@@ -40,6 +41,7 @@ var (
 		Display: "The Great Marya",
 		Desc:    "A medium-sized ship used to transport tourists and travelers alike to and from Alkos",
 		Color:   "blue",
+		Type:    "Town",
 		NPCs:    []NPC{NPCKris},
 		Rooms:   []string{"RoomWestDocks"},
 		Actions: []Action{},
@@ -51,6 +53,7 @@ var (
 		Display: "The Western Docks",
 		Desc:    "A large labyrinth of platforms connecting many docked vessels",
 		Color:   "brown",
+		Type:    "Town",
 		NPCs:    []NPC{},
 		Rooms:   []string{"RoomGreatMarya"},
 		Actions: []Action{},
