@@ -36,6 +36,11 @@ func NoneDialog(s *discordgo.Session, m *discordgo.MessageCreate) {
 	s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" you do not have a character, run `.start` to start your journey")
 }
 
+// NoneCombat is generic text to print if a user is trying to do something they cannot do in combat
+func NoneCombat(s *discordgo.Session, m *discordgo.MessageCreate) {
+	s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" you cannot do that in combat")
+}
+
 func writeJSON() {
 	b, err := json.MarshalIndent(Users, "", "  ")
 	CheckFatal(err)

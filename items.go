@@ -7,10 +7,10 @@ import (
 
 // Item represents a generic item
 type Item struct {
-	Price                  int
-	Desc, Display, useName string
-	hat, weapon            bool
-	Usable, CombatUsable   bool
+	Price                int
+	Desc, Display, ID    string
+	hat, weapon          bool
+	Usable, CombatUsable bool
 }
 
 // ItemQuan represents an item string with a quantity value
@@ -22,9 +22,10 @@ type ItemQuan struct {
 var (
 	// Items contains all items (to be stored in json nicer as strings)
 	Items map[string]Item = map[string]Item{
-		"HatNone":          HatNone,
-		"ItemCanteen":      ItemCanteen,
-		"ItemEmptyCanteen": ItemEmptyCanteen,
+		"HatNone":           HatNone,
+		"WeaponBaseballBat": WeaponBaseballBat,
+		"ItemCanteen":       ItemCanteen,
+		"ItemEmptyCanteen":  ItemEmptyCanteen,
 	}
 
 	// Items
@@ -35,7 +36,7 @@ var (
 		Desc:         "A shiny, refillable container; heals up to two HP",
 		Usable:       true,
 		CombatUsable: true,
-		useName:      "Canteen",
+		ID:           "ItemCanteen",
 	}
 
 	// ItemEmptyCanteen is an empty canteen
@@ -47,31 +48,48 @@ var (
 	// Hats
 
 	// HatNone is used when a character has no hat
-	HatNone Item = Item{
-		hat: true,
-	}
+	HatNone Item = NewHat("", "", "", 0)
+
+	// Weapons
+
+	// WeaponBaseballBat is a weapon
+	WeaponBaseballBat = NewWeapon("Baseball bat", "A strong wooden bat", "WeaponBaseballBat", 12)
 )
 
-// Uses
+// NewWeapon is a constructor for a weapon
+func NewWeapon(display, desc, weapName string, price int) Item {
+
+	return Item{Price: price, Desc: desc, Display: display, ID: weapName, weapon: true}
+}
+
+// NewHat is a constructor for a weapon
+func NewHat(display, desc, hatName string, price int) Item {
+
+	return Item{Price: price, Desc: desc, Display: display, ID: hatName, hat: true}
+}
 
 // Use runs code to use a specific item
 func (item Item) Use(num int, s *discordgo.Session, m *discordgo.MessageCreate) {
+
+	user := Users[m.Author.ID]
+
+	if item.weapon {
+		user.AddArs(num, s, m)
+		return
+	}
 
 	if !item.Usable {
 		s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" that item cannot be used")
 		return
 	}
 
-	user := Users[m.Author.ID]
-
 	if !item.CombatUsable && user.Combat {
 		s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" that item cannot be used in combat")
 		return
 	}
 
-	switch item.useName {
-	case "Canteen":
-		user := Users[m.Author.ID]
+	switch item.ID {
+	case "ItemCanteen":
 
 		healed := user.Heal(2)
 		if healed == 0 {
