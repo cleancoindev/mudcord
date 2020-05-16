@@ -71,8 +71,16 @@ func CommandGo(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
+	user := Users[m.Author.ID]
+
+	// Cannot use in combat
+	if user.Combat {
+		NoneCombat(s, m)
+		return
+	}
+
 	// Get the players current room
-	room := Rooms[Users[m.Author.ID].Room]
+	room := Rooms[user.Room]
 
 	// Get room number from message and return if it is not a number
 	num, err := strconv.Atoi(strings.Split(m.Content, " ")[len(strings.Split(m.Content, " "))-1:][0])
@@ -88,7 +96,7 @@ func CommandGo(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 	s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" "+Rooms[room.Rooms[num]].Into)
-	Users[m.Author.ID].Room = room.Rooms[num]
+	user.Room = room.Rooms[num]
 }
 
 // CommandAct is used to do an action
@@ -100,8 +108,16 @@ func CommandAct(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
+	user := Users[m.Author.ID]
+
+	// Cannot use in combat
+	if user.Combat {
+		NoneCombat(s, m)
+		return
+	}
+
 	// Get the players current room
-	room := Rooms[Users[m.Author.ID].Room]
+	room := Rooms[user.Room]
 
 	// Get action number from message and return if it is not a number
 	num, err := strconv.Atoi(strings.Split(m.Content, " ")[len(strings.Split(m.Content, " "))-1:][0])
@@ -128,8 +144,16 @@ func CommandTalk(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
+	user := Users[m.Author.ID]
+
+	// Cannot use in combat
+	if user.Combat {
+		NoneCombat(s, m)
+		return
+	}
+
 	// Get the players current room
-	room := Rooms[Users[m.Author.ID].Room]
+	room := Rooms[user.Room]
 
 	// Get npc number from message and return if it is not a number
 	num, err := strconv.Atoi(strings.Split(m.Content, " ")[len(strings.Split(m.Content, " "))-1:][0])
@@ -161,7 +185,7 @@ func CommandStart(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	// Create a new character in the Users map
 	s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" you hear the captain say 'land ho!'. You've arrived at the forgotten island of Alkos, ready to start a new journey")
-	Users[m.Author.ID] = &User{Level: 1, XP: 0, HP: [2]int{20, 20}, Gold: 0, Room: "RoomGreatMarya", Hat: "HatNone", Inv: []*ItemQuan{{Item: "ItemCanteen", Quan: 1}}}
+	Users[m.Author.ID] = &User{Level: 1, XP: 0, HP: [2]int{20, 20}, MP: [2]int{20, 20}, Gold: 0, Room: "RoomGreatMarya", Hat: "HatNone", Inv: []*ItemQuan{{Item: "ItemCanteen", Quan: 1}}, Arsenal: []string{"WeaponBaseballBat"}}
 }
 
 // CommandDelete is used to delete a players data
@@ -310,9 +334,10 @@ func CommandItem(s *discordgo.Session, m *discordgo.MessageCreate) {
 	item := Items[user.Inv[num].Item]
 
 	fields := []*discordgo.MessageEmbedField{
-		{Name: "Type", Value: item.Type, Inline: true},
+		{Name: "Type", Value: item.Type(), Inline: true},
 		{Name: "Usable", Value: strconv.FormatBool(item.Usable), Inline: true},
 		{Name: "Amount", Value: strconv.Itoa(user.Inv[num].Quan), Inline: true},
+		{Name: "Combat usable", Value: strconv.FormatBool(item.CombatUsable), Inline: true},
 	}
 
 	// Collect and send the data
@@ -354,11 +379,86 @@ func CommandUse(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	item := Items[user.Inv[num].Item]
 
-	if !item.Usable {
-		UseNone(num, s, m)
+	item.Use(num, s, m)
+}
+
+// CommandArs is for management of your weapons arsenal
+func CommandArs(s *discordgo.Session, m *discordgo.MessageCreate) {
+
+	// return and send message if character is not started
+	if !CheckStarted(m.Author.ID) {
+		NoneDialog(s, m)
 		return
 	}
-	item.Use(num, s, m)
+
+	user := Users[m.Author.ID]
+	room := Rooms[user.Room]
+
+	// Cannot use in combat
+	if user.Combat {
+		NoneCombat(s, m)
+		return
+	}
+
+	// Send message if empty
+	if len(user.Arsenal) <= 0 {
+		s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" your weapons arsenal is empty")
+		return
+
+	}
+
+	// Collect and send the data
+	var items string
+	for i, val := range user.Arsenal {
+		items += "**" + strconv.Itoa(i+1) + ".** " + Items[val].Display + "\n"
+	}
+
+	embed := discordgo.MessageEmbed{
+		Title:  "Arsenal",
+		Color:  Colors[room.Color],
+		Fields: []*discordgo.MessageEmbedField{&discordgo.MessageEmbedField{Name: strconv.Itoa(len(user.Arsenal)) + "/3 weapons", Value: items, Inline: false}},
+		Author: &discordgo.MessageEmbedAuthor{Name: m.Author.Username, IconURL: m.Author.AvatarURL("")},
+	}
+
+	s.ChannelMessageSendEmbed(m.ChannelID, &embed)
+
+}
+
+// CommandArm removes a weapon from your weapons arsenal
+func CommandArm(s *discordgo.Session, m *discordgo.MessageCreate) {
+
+	// return and send message if character is not started
+	if !CheckStarted(m.Author.ID) {
+		NoneDialog(s, m)
+		return
+	}
+
+	user := Users[m.Author.ID]
+
+	// Cannot use in combat
+	if user.Combat {
+		NoneCombat(s, m)
+		return
+	}
+
+	// Get the players arsenal
+	ars := user.Arsenal
+
+	// Get action number from message and return if it is not a number
+	num, err := strconv.Atoi(strings.Split(m.Content, " ")[len(strings.Split(m.Content, " "))-1:][0])
+	if err != nil {
+		s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" that weapon does not exist")
+		return
+	}
+	num--
+
+	// return if action number does not exist
+	if num <= -1 || len(ars) <= num {
+		s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" that weapon does not exist")
+		return
+	}
+
+	user.RemoveArs(num, s, m)
 }
 
 // Utility commands

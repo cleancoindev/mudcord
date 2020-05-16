@@ -7,12 +7,10 @@ import (
 
 // Item represents a generic item
 type Item struct {
-	Value   int
-	Type    string
-	Display string
-	Desc    string
-	Usable  bool
-	Use     func(num int, s *discordgo.Session, m *discordgo.MessageCreate)
+	Price                int
+	Desc, Display, ID    string
+	hat, weapon          bool
+	Usable, CombatUsable bool
 }
 
 // ItemQuan represents an item string with a quantity value
@@ -24,44 +22,95 @@ type ItemQuan struct {
 var (
 	// Items contains all items (to be stored in json nicer as strings)
 	Items map[string]Item = map[string]Item{
-		"HatNone":          HatNone,
-		"ItemCanteen":      ItemCanteen,
-		"ItemEmptyCanteen": ItemEmptyCanteen,
+		"HatNone":           HatNone,
+		"WeaponBaseballBat": WeaponBaseballBat,
+		"ItemCanteen":       ItemCanteen,
+		"ItemEmptyCanteen":  ItemEmptyCanteen,
 	}
 
 	// Items
 
 	// ItemCanteen is a canteen
-	ItemCanteen Item = Item{Type: "Item", Display: "Canteen", Desc: "A shiny, refillable container; heals up to two HP", Usable: true, Use: UseCanteen}
+	ItemCanteen Item = Item{
+		Display:      "Canteen",
+		Desc:         "A shiny, refillable container; heals up to two HP",
+		Usable:       true,
+		CombatUsable: true,
+		ID:           "ItemCanteen",
+	}
 
 	// ItemEmptyCanteen is an empty canteen
-	ItemEmptyCanteen Item = Item{Type: "Item", Display: "Empty Canteen", Desc: "A shiny, refillable container", Usable: false, Use: UseNone}
+	ItemEmptyCanteen Item = Item{
+		Display: "Empty Canteen",
+		Desc:    "A shiny, refillable container",
+	}
 
 	// Hats
 
 	// HatNone is used when a character has no hat
-	HatNone Item = Item{Type: "Hat", Display: "", Desc: "", Usable: false, Use: UseNone}
+	HatNone Item = NewHat("", "", "", 0)
+
+	// Weapons
+
+	// WeaponBaseballBat is a weapon
+	WeaponBaseballBat = NewWeapon("Baseball bat", "A strong wooden bat", "WeaponBaseballBat", 12)
 )
 
-// Uses
+// NewWeapon is a constructor for a weapon
+func NewWeapon(display, desc, weapName string, price int) Item {
 
-// UseNone is for items that cannot be used
-func UseNone(_ int, s *discordgo.Session, m *discordgo.MessageCreate) {
-	s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" that item cannot be used")
+	return Item{Price: price, Desc: desc, Display: display, ID: weapName, weapon: true}
 }
 
-// UseCanteen uses the canteen item
-func UseCanteen(num int, s *discordgo.Session, m *discordgo.MessageCreate) {
+// NewHat is a constructor for a weapon
+func NewHat(display, desc, hatName string, price int) Item {
+
+	return Item{Price: price, Desc: desc, Display: display, ID: hatName, hat: true}
+}
+
+// Use runs code to use a specific item
+func (item Item) Use(num int, s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	user := Users[m.Author.ID]
 
-	healed := user.Heal(2)
-	if healed == 0 {
-		s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" you are already at full health")
+	if item.weapon {
+		user.AddArs(num, s, m)
 		return
 	}
 
-	s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" you chug down the water inside, healing "+strconv.Itoa(healed)+" health")
-	user.RemoveItem(num)
-	user.AddItem("ItemEmptyCanteen", 1)
+	if !item.Usable {
+		s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" that item cannot be used")
+		return
+	}
+
+	if !item.CombatUsable && user.Combat {
+		s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" that item cannot be used in combat")
+		return
+	}
+
+	switch item.ID {
+	case "ItemCanteen":
+
+		healed := user.Heal(2)
+		if healed == 0 {
+			s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" you are already at full health")
+			return
+		}
+
+		s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" you chug down the water inside, healing "+strconv.Itoa(healed)+" health")
+		user.RemoveItem(num)
+		user.AddItem("ItemEmptyCanteen", 1)
+	}
+
+}
+
+// Type returns the type of an item as a string
+func (item Item) Type() string {
+	if item.hat {
+		return "Hat"
+	}
+	if item.weapon {
+		return "Weapon"
+	}
+	return "Item"
 }

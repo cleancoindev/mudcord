@@ -60,6 +60,10 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		go CommandItem(s, m)
 	case prefix + "use":
 		go CommandUse(s, m)
+	case prefix + "ars":
+		go CommandArs(s, m)
+	case prefix + "arm":
+		go CommandArm(s, m)
 
 	// Utility commands
 	case prefix + "ping":

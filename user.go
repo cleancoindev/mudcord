@@ -1,14 +1,17 @@
 package main
 
+import (
+	"github.com/bwmarrin/discordgo"
+)
+
 // User represents a character
 type User struct {
-	Level int
-	XP    int
-	Gold  int
-	HP    [2]int
-	Room  string
-	Hat   string
-	Inv   []*ItemQuan
+	Level, Gold, XP int
+	HP, MP          [2]int
+	Combat          bool
+	Room, Hat       string
+	Inv             []*ItemQuan
+	Arsenal         []string
 }
 
 // RemoveItem will either remove an item from a users inventory or decrement the quantity
@@ -31,6 +34,34 @@ func (user *User) AddItem(item string, quan int) {
 	}
 
 	user.Inv = append(user.Inv, &ItemQuan{Item: item, Quan: quan})
+}
+
+// AddArs will attempt to add an item to a users arsenal
+func (user *User) AddArs(index int, s *discordgo.Session, m *discordgo.MessageCreate) {
+	if len(user.Arsenal) >= 3 {
+		s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" your weapon arsenal is full")
+		return
+	}
+
+	item := Items[user.Inv[index].Item]
+
+	user.Arsenal = append(user.Arsenal, item.ID)
+	user.RemoveItem(index)
+	s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" moved **"+item.Display+"** to your weapon arsenal")
+}
+
+// RemoveArs will attempt to remove an item to a users arsenal
+func (user *User) RemoveArs(index int, s *discordgo.Session, m *discordgo.MessageCreate) {
+	if len(user.Arsenal) <= index {
+		s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" that weapon does not exist")
+		return
+	}
+
+	item := Items[user.Arsenal[index]]
+
+	user.Arsenal = append(user.Arsenal[:index], user.Arsenal[index+1:]...)
+	user.AddItem(item.ID, 1)
+	s.ChannelMessageSend(m.ChannelID, m.Author.Mention()+" moved **"+item.Display+"** out of your weapon arsenal")
 }
 
 // InvCount gets the total number of items in a users inventory
