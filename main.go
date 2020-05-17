@@ -5,7 +5,12 @@ import (
 	"io/ioutil"
 	"os"
 	"os/signal"
+	"strconv"
+	"strings"
 	"syscall"
+
+	"github.com/tteeoo/mudcord/data"
+	"github.com/tteeoo/mudcord/util"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/sirupsen/logrus"
@@ -14,51 +19,22 @@ import (
 // Token is the bot's authentication token which is obtained via environment variable
 var Token string = os.Getenv("MUDCORD_TOKEN")
 
-// Users stores all the information about users
-var Users map[string]*User
-
-// Servers stores all the information about servers
-var Servers map[string]*Server
-
-// Env stores all the persistent information about rooms
-var Env map[string]int
-
 func main() {
-
-	// Deserialize our data
-	b, err := ioutil.ReadFile("users.json")
-	CheckFatal(err)
-	err = json.Unmarshal(b, &Users)
-	CheckFatal(err)
-
-	sb, err := ioutil.ReadFile("servers.json")
-	CheckFatal(err)
-	err = json.Unmarshal(sb, &Servers)
-	CheckFatal(err)
-
-	if _, err := os.Stat("env.json"); os.IsNotExist(err) {
-		Env = DefaultEnv
-	} else {
-		eb, err := ioutil.ReadFile("env.json")
-		CheckFatal(err)
-		err = json.Unmarshal(eb, &Env)
-		CheckFatal(err)
-	}
 
 	// Start serialization goroutine
 	serQuit := make(chan bool)
-	go Serializer(serQuit)
+	go data.Serializer(serQuit)
 
 	// Make bot
 	bot, err := discordgo.New("Bot " + Token)
-	CheckFatal(err)
+	util.CheckFatal(err)
 
 	// Add handlers
 	bot.AddHandler(Ready)
 	bot.AddHandler(MessageCreate)
 
 	// Open connection
-	CheckFatal(bot.Open())
+	util.CheckFatal(bot.Open())
 	defer bot.Close()
 
 	// Listen for ^C or other signals to stop
@@ -69,5 +45,40 @@ func main() {
 
 	serQuit <- true
 	logrus.Info("Shutting down")
+}
 
+func ready(s *discordgo.Session, event *discordgo.Ready) {
+
+	logrus.Info("mudcord ready")
+
+	guilds := len(s.State.Guilds)
+
+	s.UpdateStatus(0, "on "+strconv.Itoa(guilds)+" servers")
+}
+
+func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
+
+	// return if the message is sent by the bot itself
+	if m.Author.ID == s.State.User.ID {
+		return
+	}
+
+	// Check if the server is not is Servers and add it
+	_, exists := Servers[m.GuildID]
+	if !exists {
+		Servers[m.GuildID] = &Server{Prefix: "."}
+	}
+
+	prefix := Servers[m.GuildID].Prefix
+
+	for name, cmd := range command.Commands {
+		if prefix+name == strings.Split(m.Content, " ")[0] {
+			ctx := data.Context{
+				Session: s,
+				Message: m,
+			}
+
+			go cmd.Exec(&ctx)
+		}
+	}
 }

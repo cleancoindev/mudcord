@@ -13,16 +13,6 @@ type Room struct {
 }
 
 var (
-	// Colors contains color names and their hex value in decimal (for use in embeds)
-	Colors map[string]int = map[string]int{
-		"red":   13382400,
-		"blue":  26316,
-		"green": 52326,
-		"grey":  6710886,
-		"black": 1118481,
-		"brown": 9127187,
-		"white": 16777214,
-	}
 
 	// Rooms contains all the rooms
 	Rooms map[string]Room = map[string]Room{
