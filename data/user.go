@@ -2,6 +2,7 @@ package data
 
 import (
 	"github.com/bwmarrin/discordgo"
+	"github.com/tteeoo/mudcord/thing"
 )
 
 // User represents a character
