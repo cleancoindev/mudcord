@@ -21,10 +21,6 @@ var Token string = os.Getenv("MUDCORD_TOKEN")
 
 func main() {
 
-	// Start serialization goroutine
-	serQuit := make(chan bool)
-	go data.Serializer(serQuit)
-
 	// Make bot
 	bot, err := discordgo.New("Bot " + Token)
 	util.CheckFatal(err)
@@ -43,8 +39,7 @@ func main() {
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
 	<-sc
 
-	serQuit <- true
-	logrus.Info("Shutting down")
+	logrus.Info("mudcord down")
 }
 
 func ready(s *discordgo.Session, event *discordgo.Ready) {
