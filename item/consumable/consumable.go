@@ -2,7 +2,6 @@ package consumable
 
 import (
 	"github.com/tteeoo/mudcord/util"
-	"github.com/tteeoo/mudcord/thing"
 )
 
 type Consumable struct {

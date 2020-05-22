@@ -1,10 +1,10 @@
-package thing
+package item
 
 import (
-	"strconv"
 	"github.com/bwmarrin/discordgo"
+	"github.com/tteeoo/mudcord/item/consumable"
 	"github.com/tteeoo/mudcord/util"
-	"github.com/tteeoo/mudcord/thing/consumable"
+	"strconv"
 )
 
 // Item represents a weapon, hat, ammo, quest item, or consumable
@@ -12,12 +12,6 @@ type Item interface {
 	Use(*util.Context)
 	Type() string
 	Inspect() []*discordgo.MessageEmbedField
-}
-
-// ItemQuan represents an item id with a quantity value
-type ItemQuan struct {
-	ID string
-	Quan int
 }
 
 // Items contains a string mapped to each item

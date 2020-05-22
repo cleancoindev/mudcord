@@ -1,7 +1,8 @@
 package consumable
 
 import (
-	"github.com/tteeoo/mudcord/data"
+	"strconv"
+	"github.com/tteeoo/mudcord/db"
 	"github.com/tteeoo/mudcord/util"
 )
 
@@ -15,7 +16,7 @@ var Canteen = Consumable{
 }
 
 func UseCanteen(ctx *util.Context) {
-	user := data.Users[ctx.Message.Author.ID]
+	user, _ := db.GetUser(ctx.Message.Author.ID)
 	healed := user.Heal(2)
 	if healed == 0 {
 		ctx.Reply("you are already at full health")
@@ -23,5 +24,5 @@ func UseCanteen(ctx *util.Context) {
 	}
 
 	ctx.Reply("you chug down the water inside, healing " + strconv.Itoa(healed) + " health")
-	user.RemoveItem(num)
+	user.RemoveItem(Canteen.ID)
 }
