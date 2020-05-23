@@ -1,27 +1,33 @@
 package command
 
 import (
+	"github.com/tteeoo/mudcord/command/option"
 	"github.com/tteeoo/mudcord/db"
 	"github.com/tteeoo/mudcord/util"
-	"github.com/tteeoo/mudcord/command/room"
-	"github.com/tteeoo/mudcord/command/user"
+	//"github.com/tteeoo/mudcord/command/user"
 	"github.com/tteeoo/mudcord/command/misc"
 )
 
 // Command represents a command
 type Command struct {
-	Exec func(*util.Context)
-	Help string
+	Exec                func(*util.Context)
+	Help                string
 	NoCombat, MustStart bool
 }
 
 // Commands contains all the possible commands
 var Commands = map[string]Command{
-	"ping": Command{
-		Exec: misc.Ping,
-		Help: misc.PingHelp,
+	"ping": {
+		Exec:      misc.Ping,
+		Help:      misc.PingHelp,
 		MustStart: false,
-		NoCombat: false,
+		NoCombat:  false,
+	},
+	"ops": {
+		Exec:      option.Ops,
+		Help:      option.OpsHelp,
+		MustStart: true,
+		NoCombat:  false,
 	},
 }
 

@@ -8,17 +8,15 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"os"
-	"time"
 )
 
 var ctx context.Context
-var cancel context.CancelFunc
+var Cancel context.CancelFunc
 var users *mongo.Collection
 var servers *mongo.Collection
 
 func init() {
-	ctx, cancel = context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
+	ctx, Cancel = context.WithCancel(context.Background())
 
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(os.Getenv("MUDCORD_MONGO_URI")))
 	util.CheckFatal(err)

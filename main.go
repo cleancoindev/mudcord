@@ -8,6 +8,7 @@ import (
 	"syscall"
 
 	"github.com/tteeoo/mudcord/command"
+	"github.com/tteeoo/mudcord/db"
 	"github.com/tteeoo/mudcord/util"
 
 	"github.com/bwmarrin/discordgo"
@@ -36,6 +37,8 @@ func main() {
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
 	<-sc
+
+	db.Cancel()
 
 	logrus.Info("mudcord down")
 }
@@ -72,7 +75,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 				Message: m,
 			}
 
-			go cmd.Run(&ctx)
+			cmd.Run(&ctx)
 		}
 	}
 }
