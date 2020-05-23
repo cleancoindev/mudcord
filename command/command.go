@@ -4,7 +4,7 @@ import (
 	"github.com/tteeoo/mudcord/command/option"
 	"github.com/tteeoo/mudcord/db"
 	"github.com/tteeoo/mudcord/util"
-	//"github.com/tteeoo/mudcord/command/user"
+	//"github.com/tteeoo/mudcord/command/character"
 	"github.com/tteeoo/mudcord/command/misc"
 )
 

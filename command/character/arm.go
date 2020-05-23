@@ -1,30 +1,18 @@
-package command
+package character
 
 import (
 	"strconv"
 	"strings"
 
-	"github.com/tteeoo/mudcord/data"
+	"github.com/tteeoo/mudcord/db"
 	"github.com/tteeoo/mudcord/util"
 )
 
 const ArmHelp = "arm <weapon#>; moves a weapon from your weapons arsenal to your inventory"
 
-func Arm(ctx *data.Context) {
+func Arm(ctx *util.Context) {
 
-	// return and send message if character is not started
-	if !data.CheckStarted(ctx.Message.Author.ID) {
-		ctx.Reply(util.NoneDialog)
-		return
-	}
-
-	user := data.Users[ctx.Message.Author.ID]
-
-	// Cannot use in combat
-	if user.Combat {
-		ctx.Reply(util.NoneCombat)
-		return
-	}
+	user, _ := db.GetUser(ctx.Message.Author.ID)
 
 	// Get the players arsenal
 	ars := user.Arsenal
@@ -43,5 +31,6 @@ func Arm(ctx *data.Context) {
 		return
 	}
 
-	user.RemoveArs(num, ctx)
+	user.RemoveArs(user.Arsenal[num])
+	db.SetUser(user)
 }

@@ -1,4 +1,4 @@
-package command
+package character
 
 import (
 	"math"
@@ -6,7 +6,9 @@ import (
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/tteeoo/mudcord/data"
+	"github.com/tteeoo/mudcord/db"
+	"github.com/tteeoo/mudcord/item"
+	"github.com/tteeoo/mudcord/room"
 	"github.com/tteeoo/mudcord/util"
 )
 
@@ -14,15 +16,9 @@ const InvHelp = "inv [page#]; displays a page of your inventory"
 
 func Inv(ctx *util.Context) {
 
-	// Ensure command author has not started their journey
-	if !data.CheckStarted(ctx.Message.Author.ID) {
-		ctx.Reply(util.NoneDialog)
-		return
-	}
-
 	// Get the current user and room
-	user := data.Users[ctx.Message.Author.ID]
-	room := data.Rooms[user.Room]
+	user, _ := db.GetUser(ctx.Message.Author.ID)
+	currentRoom := room.Rooms[user.Room]
 
 	if len(user.Inv) < 1 {
 		ctx.Reply("you have no items in your inventory")
@@ -42,7 +38,7 @@ func Inv(ctx *util.Context) {
 	}
 
 	// Make a map of every page
-	var pages = make(map[int][]*ItemQuan)
+	var pages = make(map[int][]*db.ItemQuan)
 	for i := 1; i <= pageCount; i++ {
 		upper := i + 6
 		if upper > len(user.Inv) {
@@ -66,13 +62,13 @@ func Inv(ctx *util.Context) {
 	// Get the slice of items in specific page
 	var items string
 	for i, val := range pages[num] {
-		items += "**" + strconv.Itoa(num*7+i-6) + ".** " + Items[val.Item].Display + " (" + strconv.Itoa(val.Quan) + ")\n"
+		items += "**" + strconv.Itoa(num*7+i-6) + ".** " + item.Items[val.ID].Display() + " (" + strconv.Itoa(val.Quan) + ")\n"
 	}
 
 	// Collect and send the data
 	embed := discordgo.MessageEmbed{
 		Title:  "Inventory",
-		Color:  Colors[room.Color],
+		Color:  util.Colors[currentRoom.Color],
 		Footer: &discordgo.MessageEmbedFooter{Text: strconv.Itoa(num) + "/" + strconv.Itoa(pageCount) + " pages"},
 		Fields: []*discordgo.MessageEmbedField{&discordgo.MessageEmbedField{Name: strconv.Itoa(user.InvCount()) + " total items", Value: items, Inline: false}},
 		Author: &discordgo.MessageEmbedAuthor{Name: ctx.Message.Author.Username, IconURL: ctx.Message.Author.AvatarURL("")},

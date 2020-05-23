@@ -8,7 +8,7 @@ type User struct {
 	Level, Gold, XP int
 	HP, MP          [2]int
 	Combat          bool
-	Inv             []*itemQuan
+	Inv             []*ItemQuan
 	Arsenal         []string
 }
 
@@ -39,7 +39,7 @@ func (user *User) AddItem(id string, quan int) {
 		}
 	}
 
-	user.Inv = append(user.Inv, &itemQuan{ID: id, Quan: quan})
+	user.Inv = append(user.Inv, &ItemQuan{ID: id, Quan: quan})
 }
 
 // AddArs will attempt to add an item to a users arsenal

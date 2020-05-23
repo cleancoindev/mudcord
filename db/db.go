@@ -27,7 +27,7 @@ func init() {
 	servers = client.Database("mudcord").Collection("servers")
 }
 
-type itemQuan struct {
+type ItemQuan struct {
 	ID   string
 	Quan int
 }
@@ -86,6 +86,18 @@ func CheckServer(id string) bool {
 	return true
 }
 
+// DeleteUser deletes a user in our db
+func DeleteUser(id string) error {
+
+	_, err := users.DeleteOne(ctx, bson.M{"id": id})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // NewUser creates a new user in our db
 func NewUser(id string) (*User, error) {
 	user := User{
@@ -97,7 +109,7 @@ func NewUser(id string) (*User, error) {
 		Gold:    0,
 		Room:    "RoomGreatMarya",
 		Hat:     "HatNone",
-		Inv:     []*itemQuan{{ID: "ConsumableCanteen", Quan: 1}},
+		Inv:     []*ItemQuan{{ID: "ConsumableCanteen", Quan: 1}},
 		Arsenal: []string{"WeaponBaseballBat"},
 	}
 	_, err := users.InsertOne(ctx, user)
