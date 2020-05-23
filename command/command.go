@@ -1,11 +1,11 @@
 package command
 
 import (
-	"github.com/tteeoo/mudcord/command/option"
 	"github.com/tteeoo/mudcord/db"
 	"github.com/tteeoo/mudcord/util"
-	//"github.com/tteeoo/mudcord/command/character"
 	"github.com/tteeoo/mudcord/command/misc"
+	"github.com/tteeoo/mudcord/command/option"
+	"github.com/tteeoo/mudcord/command/character"
 )
 
 // Command represents a command
@@ -29,10 +29,22 @@ var Commands = map[string]Command{
 		MustStart: true,
 		NoCombat:  false,
 	},
+	"start": {
+		Exec:      character.Start,
+		Help:      character.StartHelp,
+		NoCombat:  false,
+	},
 }
 
 // Run will ensure the user has a started character if required
 func (cmd *Command) Run(ctx *util.Context) {
+	if cmd.Help == character.StartHelp {
+		if db.CheckStarted(ctx.Message.Author.ID) {
+			ctx.Reply("you have already started your journey, run `delete` to delete your character")
+			return
+		}
+	}
+
 	if cmd.MustStart {
 		if !db.CheckStarted(ctx.Message.Author.ID) {
 			ctx.Reply(util.NoneDialog)

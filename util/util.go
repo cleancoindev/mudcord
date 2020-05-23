@@ -7,7 +7,7 @@ import (
 )
 
 // NoneDialog is generic text to print if a user deoes not have a character
-const NoneDialog = "you do not have a character, run `.start` to start your journey"
+const NoneDialog = "you do not have a character, run `start` to start your journey"
 
 // NoneCombat is generic text to print if a user is trying to do something they cannot do in combat
 const NoneCombat = "you cannot do that in combat"
