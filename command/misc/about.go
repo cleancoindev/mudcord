@@ -1,4 +1,4 @@
-package command
+package misc
 
 import (
 	"github.com/bwmarrin/discordgo"
@@ -6,7 +6,7 @@ import (
 	"github.com/tteeoo/mudcord/util"
 )
 
-const commandAboutHelp = "about; sends a brief message explaining more about mudcord"
+const AboutHelp = "about; sends a brief message explaining more about mudcord"
 
 func About(ctx *util.Context) {
 

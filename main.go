@@ -72,7 +72,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 				Message: m,
 			}
 
-			go cmd.Exec(&ctx)
+			go cmd.Run(&ctx)
 		}
 	}
 }
