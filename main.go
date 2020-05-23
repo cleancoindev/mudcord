@@ -7,6 +7,7 @@ import (
 	"strings"
 	"syscall"
 
+	"github.com/tteeoo/mudcord/command"
 	"github.com/tteeoo/mudcord/util"
 
 	"github.com/bwmarrin/discordgo"
@@ -23,8 +24,8 @@ func main() {
 	util.CheckFatal(err)
 
 	// Add handlers
-	bot.AddHandler(Ready)
-	bot.AddHandler(MessageCreate)
+	bot.AddHandler(ready)
+	bot.AddHandler(messageCreate)
 
 	// Open connection
 	util.CheckFatal(bot.Open())
@@ -56,12 +57,13 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 
 	// Check if the server is not is Servers and add it
-	_, exists := Servers[m.GuildID]
-	if !exists {
-		Servers[m.GuildID] = &Server{Prefix: "."}
+	if !db.CheckServer(m.GuildID) {
+		db.NewServer(m.GuildID)
 	}
 
-	prefix := Servers[m.GuildID].Prefix
+	server, _ := db.GetServer(m.GuildID)
+
+	prefix := server.Prefix
 
 	for name, cmd := range command.Commands {
 		if prefix+name == strings.Split(m.Content, " ")[0] {
