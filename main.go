@@ -9,7 +9,6 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/tteeoo/mudcord/data"
 	"github.com/tteeoo/mudcord/util"
 
 	"github.com/bwmarrin/discordgo"
@@ -68,7 +67,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	for name, cmd := range command.Commands {
 		if prefix+name == strings.Split(m.Content, " ")[0] {
-			ctx := data.Context{
+			ctx := util.Context{
 				Session: s,
 				Message: m,
 			}
