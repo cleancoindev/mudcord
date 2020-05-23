@@ -1,9 +1,6 @@
 # Binaries for programs and plugins
 mudcord
 tags
-servers.json
-users.json
-env.json
 *.exe
 *.exe~
 *.dll
