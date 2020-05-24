@@ -28,15 +28,8 @@ func Ars(ctx *util.Context) {
 	// Collect and send the data
 	var items string
 	for i, val := range user.Arsenal {
-		currentItem := item.Items[val]
-		switch currentItem.(type) {
-		case weapon.Weapon:
-			weap := item.Items[val].(weapon.Weapon)
-			items += "**" + strconv.Itoa(i+1) + ".** " + weap.Display + "\n"
-		default:
-			ctx.Reply("Bad weapon: " + val)
-			return
-		}
+		weap := item.Items[val].(weapon.Weapon)
+		items += "**" + strconv.Itoa(i+1) + ".** " + weap.Display + "\n"
 	}
 
 	embed := discordgo.MessageEmbed{
