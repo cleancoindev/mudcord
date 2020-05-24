@@ -72,6 +72,19 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	prefix := server.Prefix
 
+	// help command
+	if strings.Split(m.Content, " ")[0] == prefix+"help" {
+		message := "```"
+		for _, cmd := range command.Commands {
+			message += "" + cmd.Help + "\n"
+		}
+		ctx := util.Context{
+			Session: s,
+			Message: m,
+		}
+		ctx.Reply(message + "```")
+	}
+
 	for name, cmd := range command.Commands {
 		if prefix+name == strings.Split(m.Content, " ")[0] {
 			ctx := util.Context{
@@ -79,7 +92,8 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 				Message: m,
 			}
 
-			cmd.Run(&ctx)
+			go cmd.Run(&ctx)
+			return
 		}
 	}
 }
