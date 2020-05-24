@@ -109,6 +109,12 @@ var Commands = map[string]Command{
 		NoCombat:  false,
 		MustStart: true,
 	},
+	"trash": {
+		Exec:      character.Trash,
+		Help:      character.TrashHelp,
+		NoCombat:  false,
+		MustStart: true,
+	},
 }
 
 // Run will ensure the user has a started character if required
