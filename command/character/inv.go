@@ -78,7 +78,7 @@ func Inv(ctx *util.Context) {
 		Title:  "Inventory",
 		Color:  util.Colors[currentRoom.Color],
 		Footer: &discordgo.MessageEmbedFooter{Text: strconv.Itoa(num) + "/" + strconv.Itoa(pageCount) + " pages"},
-		Fields: []*discordgo.MessageEmbedField{&discordgo.MessageEmbedField{Name: strconv.Itoa(user.InvCount()) + " total items", Value: items, Inline: false}},
+		Fields: []*discordgo.MessageEmbedField{{Name: strconv.Itoa(user.InvCount()) + " total items", Value: items, Inline: false}},
 		Author: &discordgo.MessageEmbedAuthor{Name: ctx.Message.Author.Username, IconURL: ctx.Message.Author.AvatarURL("")},
 	}
 

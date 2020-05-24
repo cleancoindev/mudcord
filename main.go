@@ -54,7 +54,7 @@ func ready(s *discordgo.Session, event *discordgo.Ready) {
 func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	defer func() {
 		if r := recover(); r != nil {
-		    logrus.Warn("recovered from panic in messageCreate: ", r, "; message: #" + m.ID + ": " + m.Content)
+			logrus.Warn("recovered from panic in messageCreate: ", r, "; message: #"+m.ID+": "+m.Content)
 		}
 	}()
 

@@ -2,8 +2,8 @@ package consumable
 
 import (
 	"github.com/bwmarrin/discordgo"
-	"github.com/tteeoo/mudcord/util"
 	"github.com/tteeoo/mudcord/db"
+	"github.com/tteeoo/mudcord/util"
 	"strconv"
 )
 

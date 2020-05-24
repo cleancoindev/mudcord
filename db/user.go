@@ -1,7 +1,5 @@
 package db
 
-import ()
-
 // User represents a character
 type User struct {
 	ID, Room, Hat   string

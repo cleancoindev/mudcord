@@ -6,9 +6,9 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/tteeoo/mudcord/db"
 	"github.com/tteeoo/mudcord/item"
+	"github.com/tteeoo/mudcord/item/weapon"
 	"github.com/tteeoo/mudcord/room"
 	"github.com/tteeoo/mudcord/util"
-	"github.com/tteeoo/mudcord/item/weapon"
 )
 
 const ArsHelp = "ars <weapon#>; moves a weapon from your inventory to your weapons arsenal"
@@ -35,7 +35,7 @@ func Ars(ctx *util.Context) {
 	embed := discordgo.MessageEmbed{
 		Title:  "Arsenal",
 		Color:  util.Colors[currentRoom.Color],
-		Fields: []*discordgo.MessageEmbedField{&discordgo.MessageEmbedField{Name: strconv.Itoa(len(user.Arsenal)) + "/3 weapons", Value: items, Inline: false}},
+		Fields: []*discordgo.MessageEmbedField{{Name: strconv.Itoa(len(user.Arsenal)) + "/3 weapons", Value: items, Inline: false}},
 		Author: &discordgo.MessageEmbedAuthor{Name: ctx.Message.Author.Username, IconURL: ctx.Message.Author.AvatarURL("")},
 	}
 

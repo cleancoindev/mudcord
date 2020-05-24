@@ -17,4 +17,3 @@ func (ctx *Context) Reply(message string) {
 func (ctx *Context) SendEmbed(embed discordgo.MessageEmbed) {
 	ctx.Session.ChannelMessageSendEmbed(ctx.Message.ChannelID, &embed)
 }
-

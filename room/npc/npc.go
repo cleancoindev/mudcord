@@ -12,7 +12,6 @@ type NPC struct {
 	Dialog []string
 }
 
-
 // SpeakDefault returns a random dialog of an NPC
 func SpeakDefault(self NPC) string {
 	rand.Seed(time.Now().Unix())

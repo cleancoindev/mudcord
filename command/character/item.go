@@ -7,8 +7,8 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/tteeoo/mudcord/db"
 	"github.com/tteeoo/mudcord/item"
-	"github.com/tteeoo/mudcord/item/weapon"
 	"github.com/tteeoo/mudcord/item/consumable"
+	"github.com/tteeoo/mudcord/item/weapon"
 	"github.com/tteeoo/mudcord/room"
 	"github.com/tteeoo/mudcord/util"
 )
