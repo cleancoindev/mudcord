@@ -7,12 +7,12 @@ import (
 )
 
 var Canteen = Consumable{
-	price:        10,
-	display:      "Canteen",
-	desc:         "A shiny, refillable container; heals up to two HP",
-	id:           "ConsumableCanteen",
-	combatUsable: true,
-	consume:          UseCanteen,
+	Price:        10,
+	Display:      "Canteen",
+	Desc:         "A shiny, refillable container; heals up to two HP",
+	ID:           "ConsumableCanteen",
+	CombatUsable: true,
+	consume:      UseCanteen,
 }
 
 func UseCanteen(ctx *util.Context) {

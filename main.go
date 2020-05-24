@@ -19,6 +19,7 @@ import (
 var Token string = os.Getenv("MUDCORD_TOKEN")
 
 func main() {
+	defer db.Cancel()
 
 	// Make bot
 	bot, err := discordgo.New("Bot " + Token)
@@ -37,8 +38,6 @@ func main() {
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
 	<-sc
-
-	db.Cancel()
 
 	logrus.Info("mudcord down")
 }

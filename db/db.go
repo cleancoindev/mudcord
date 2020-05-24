@@ -110,7 +110,7 @@ func NewUser(id string) (*User, error) {
 		Room:    "RoomGreatMarya",
 		Hat:     "HatNone",
 		Inv:     []*ItemQuan{{ID: "ConsumableCanteen", Quan: 1}},
-		Arsenal: []string{"WeaponBaseballBat"},
+		Arsenal: []string{"WeaponWoodSword"},
 	}
 	_, err := users.InsertOne(ctx, user)
 

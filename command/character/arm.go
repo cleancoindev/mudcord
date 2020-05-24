@@ -6,6 +6,8 @@ import (
 
 	"github.com/tteeoo/mudcord/db"
 	"github.com/tteeoo/mudcord/util"
+	"github.com/tteeoo/mudcord/item"
+	"github.com/tteeoo/mudcord/item/weapon"
 )
 
 const ArmHelp = "arm <weapon#>; moves a weapon from your weapons arsenal to your inventory"
@@ -31,6 +33,9 @@ func Arm(ctx *util.Context) {
 		return
 	}
 
-	user.RemoveArs(user.Arsenal[num])
+	currentWeapon := user.Arsenal[num]
+	user.RemoveArs(currentWeapon)
+	user.AddItem(currentWeapon, 1)
+	ctx.Reply("moved **" + item.Items[currentWeapon].(weapon.Weapon).Display + "** from your weapons arsenal to your inventory")
 	db.SetUser(user)
 }

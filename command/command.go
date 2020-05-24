@@ -1,11 +1,11 @@
 package command
 
 import (
-	"github.com/tteeoo/mudcord/db"
-	"github.com/tteeoo/mudcord/util"
+	"github.com/tteeoo/mudcord/command/character"
 	"github.com/tteeoo/mudcord/command/misc"
 	"github.com/tteeoo/mudcord/command/option"
-	"github.com/tteeoo/mudcord/command/character"
+	"github.com/tteeoo/mudcord/db"
+	"github.com/tteeoo/mudcord/util"
 )
 
 // Command represents a command
@@ -17,22 +17,97 @@ type Command struct {
 
 // Commands contains all the possible commands
 var Commands = map[string]Command{
+	// Misc. utility commands
 	"ping": {
 		Exec:      misc.Ping,
 		Help:      misc.PingHelp,
 		MustStart: false,
 		NoCombat:  false,
 	},
+	"prefix": {
+		Exec:      misc.Prefix,
+		Help:      misc.PrefixHelp,
+		MustStart: false,
+		NoCombat:  false,
+	},
+	"about": {
+		Exec:      misc.About,
+		Help:      misc.AboutHelp,
+		MustStart: false,
+		NoCombat:  false,
+	},
+	// Room based option commands
 	"ops": {
 		Exec:      option.Ops,
 		Help:      option.OpsHelp,
 		MustStart: true,
 		NoCombat:  false,
 	},
+	"act": {
+		Exec:      option.Act,
+		Help:      option.ActHelp,
+		MustStart: true,
+		NoCombat:  true,
+	},
+	"talk": {
+		Exec:      option.Talk,
+		Help:      option.TalkHelp,
+		MustStart: true,
+		NoCombat:  true,
+	},
+	"go": {
+		Exec:      option.Go,
+		Help:      option.GoHelp,
+		MustStart: true,
+		NoCombat:  true,
+	},
+	// Character based commands
 	"start": {
-		Exec:      character.Start,
-		Help:      character.StartHelp,
+		Exec:     character.Start,
+		Help:     character.StartHelp,
+		NoCombat: false,
+	},
+	"arm": {
+		Exec:      character.Arm,
+		Help:      character.ArmHelp,
+		NoCombat:  true,
+		MustStart: true,
+	},
+	"ars": {
+		Exec:      character.Ars,
+		Help:      character.ArsHelp,
 		NoCombat:  false,
+		MustStart: true,
+	},
+	"delete": {
+		Exec:      character.Delete,
+		Help:      character.DeleteHelp,
+		NoCombat:  false,
+		MustStart: true,
+	},
+	"inv": {
+		Exec:      character.Inv,
+		Help:      character.InvHelp,
+		NoCombat:  false,
+		MustStart: true,
+	},
+	"item": {
+		Exec:      character.Item,
+		Help:      character.ItemHelp,
+		NoCombat:  false,
+		MustStart: true,
+	},
+	"status": {
+		Exec:      character.Status,
+		Help:      character.StatusHelp,
+		NoCombat:  false,
+		MustStart: true,
+	},
+	"use": {
+		Exec:      character.Use,
+		Help:      character.UseHelp,
+		NoCombat:  false,
+		MustStart: true,
 	},
 }
 

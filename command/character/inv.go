@@ -8,6 +8,8 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/tteeoo/mudcord/db"
 	"github.com/tteeoo/mudcord/item"
+	"github.com/tteeoo/mudcord/item/consumable"
+	"github.com/tteeoo/mudcord/item/weapon"
 	"github.com/tteeoo/mudcord/room"
 	"github.com/tteeoo/mudcord/util"
 )
@@ -62,7 +64,13 @@ func Inv(ctx *util.Context) {
 	// Get the slice of items in specific page
 	var items string
 	for i, val := range pages[num] {
-		items += "**" + strconv.Itoa(num*7+i-6) + ".** " + item.Items[val.ID].Display() + " (" + strconv.Itoa(val.Quan) + ")\n"
+		currentItem := item.Items[val.ID]
+		switch currentItem.(type) {
+		case consumable.Consumable:
+			items += "**" + strconv.Itoa(num*7+i-6) + ".** " + currentItem.(consumable.Consumable).Display + " (" + strconv.Itoa(val.Quan) + ")\n"
+		case weapon.Weapon:
+			items += "**" + strconv.Itoa(num*7+i-6) + ".** " + currentItem.(weapon.Weapon).Display + " (" + strconv.Itoa(val.Quan) + ")\n"
+		}
 	}
 
 	// Collect and send the data
