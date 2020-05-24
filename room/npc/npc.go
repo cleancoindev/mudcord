@@ -1,4 +1,4 @@
-package main
+package npc
 
 import (
 	"math/rand"
@@ -8,18 +8,10 @@ import (
 // NPC represents a generic NPC
 type NPC struct {
 	Name   string
-	Speak  func(self NPC) string
+	Speak  func(NPC) string
 	Dialog []string
 }
 
-var (
-	// NPCKris is a bro
-	NPCKris NPC = NPC{
-		Name:   "Captain Kris",
-		Dialog: []string{"Ahoy matey!", "Have a good time in Alkos!", "I've had this here boat for 16 years"},
-		Speak:  SpeakDefault,
-	}
-)
 
 // SpeakDefault returns a random dialog of an NPC
 func SpeakDefault(self NPC) string {
