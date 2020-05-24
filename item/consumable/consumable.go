@@ -3,6 +3,7 @@ package consumable
 import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/tteeoo/mudcord/util"
+	"github.com/tteeoo/mudcord/db"
 	"strconv"
 )
 
@@ -23,4 +24,7 @@ func (item Consumable) Inspect() []*discordgo.MessageEmbedField {
 
 func (item Consumable) Use(ctx *util.Context) {
 	item.consume(ctx)
+	user, _ := db.GetUser(ctx.Message.Author.ID)
+	user.RemoveItem(item.ID)
+	db.SetUser(user)
 }
