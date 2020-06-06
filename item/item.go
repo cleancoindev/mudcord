@@ -11,6 +11,8 @@ import (
 type Item interface {
 	Inspect() []*discordgo.MessageEmbedField
 	Use(*util.Context)
+	Display() string
+	Desc() string
 }
 
 // Items contains a string mapped to each item

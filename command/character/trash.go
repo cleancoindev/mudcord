@@ -6,8 +6,6 @@ import (
 
 	"github.com/tteeoo/mudcord/db"
 	"github.com/tteeoo/mudcord/item"
-	"github.com/tteeoo/mudcord/item/consumable"
-	"github.com/tteeoo/mudcord/item/weapon"
 	"github.com/tteeoo/mudcord/util"
 )
 
@@ -50,19 +48,11 @@ func Trash(ctx *util.Context) {
 	// Collect and send the data
 	currentItem := item.Items[user.Inv[num].ID]
 
-	var display string
-	switch currentItem.(type) {
-	case consumable.Consumable:
-		display = currentItem.(consumable.Consumable).Display
-	case weapon.Weapon:
-		display = currentItem.(weapon.Weapon).Display
-	}
-
 	for i := 0; i < amount; i++ {
 		user.RemoveItem(user.Inv[num].ID)
 	}
 
 	db.SetUser(user)
 
-	ctx.Reply("removed " + strconv.Itoa(amount) + " **" + display + "** from your inventory")
+	ctx.Reply("removed " + strconv.Itoa(amount) + " **" + currentItem.Display() + "** from your inventory")
 }

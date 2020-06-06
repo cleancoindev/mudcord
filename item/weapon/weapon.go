@@ -8,7 +8,7 @@ import (
 )
 
 type Weapon struct {
-	weaponType, Desc, Display, ID            string
+	weaponType, desc, display, ID            string
 	Price, Damage, Accuracy, Crit, Speed, MP int
 }
 
@@ -27,11 +27,19 @@ func (item Weapon) Inspect() []*discordgo.MessageEmbedField {
 func (item Weapon) Use(ctx *util.Context) {
 	user, _ := db.GetUser(ctx.Message.Author.ID)
 	if user.AddArs(item.ID) {
-		ctx.Reply("moved **" + item.Display + "** from your inventory to your weapons arsenal")
+		ctx.Reply("moved **" + item.display + "** from your inventory to your weapons arsenal")
 		user.RemoveItem(item.ID)
 		db.SetUser(user)
 		return
 	}
 
 	ctx.Reply("your weapons arsenal is full")
+}
+
+func (item Weapon) Desc() string {
+	return item.desc
+}
+
+func (item Weapon) Display() string {
+	return item.display
 }

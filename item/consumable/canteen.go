@@ -8,8 +8,8 @@ import (
 
 var Canteen = Consumable{
 	Price:        10,
-	Display:      "Canteen",
-	Desc:         "A shiny, refillable container; heals up to two HP",
+	display:      "Canteen",
+	desc:         "A shiny, refillable container; heals up to two HP",
 	ID:           "ConsumableCanteen",
 	CombatUsable: true,
 	consume:      UseCanteen,

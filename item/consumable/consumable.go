@@ -9,7 +9,7 @@ import (
 
 type Consumable struct {
 	Price             int
-	Desc, Display, ID string
+	desc, display, ID string
 	CombatUsable      bool
 	consume           func(*util.Context)
 }
@@ -27,4 +27,12 @@ func (item Consumable) Use(ctx *util.Context) {
 	user, _ := db.GetUser(ctx.Message.Author.ID)
 	user.RemoveItem(item.ID)
 	db.SetUser(user)
+}
+
+func (item Consumable) Desc() string {
+	return item.desc
+}
+
+func (item Consumable) Display() string {
+	return item.display
 }

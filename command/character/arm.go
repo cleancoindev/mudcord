@@ -36,6 +36,6 @@ func Arm(ctx *util.Context) {
 	currentWeapon := user.Arsenal[num]
 	user.RemoveArs(currentWeapon)
 	user.AddItem(currentWeapon, 1)
-	ctx.Reply("moved **" + item.Items[currentWeapon].(weapon.Weapon).Display + "** from your weapons arsenal to your inventory")
+	ctx.Reply("moved **" + item.Items[currentWeapon].(weapon.Weapon).Display() + "** from your weapons arsenal to your inventory")
 	db.SetUser(user)
 }

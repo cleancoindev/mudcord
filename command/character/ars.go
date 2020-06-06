@@ -29,7 +29,7 @@ func Ars(ctx *util.Context) {
 	var items string
 	for i, val := range user.Arsenal {
 		weap := item.Items[val].(weapon.Weapon)
-		items += "**" + strconv.Itoa(i+1) + ".** " + weap.Display + "\n"
+		items += "**" + strconv.Itoa(i+1) + ".** " + weap.Display() + "\n"
 	}
 
 	embed := discordgo.MessageEmbed{

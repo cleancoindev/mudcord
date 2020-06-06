@@ -3,8 +3,8 @@ package weapon
 var WoodSword = Weapon{
 	weaponType: "Sword",
 	Price:      25,
-	Display:    "Wood Sword",
-	Desc:       "A sturdy weapon typically used for combat practice",
+	display:    "Wood Sword",
+	desc:       "A sturdy weapon typically used for combat practice",
 	ID:         "WeaponWoodSword",
 	Damage:     6,
 	Accuracy:   9,
