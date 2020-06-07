@@ -2,7 +2,6 @@ package db
 
 import (
 	"context"
-	"github.com/sirupsen/logrus"
 	"github.com/tteeoo/mudcord/util"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -21,7 +20,7 @@ func init() {
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(os.Getenv("MUDCORD_MONGO_URI")))
 	util.CheckFatal(err)
 
-	logrus.Info("connected to db")
+	util.Logger.Println("connected to db")
 
 	users = client.Database("mudcord").Collection("users")
 	servers = client.Database("mudcord").Collection("servers")

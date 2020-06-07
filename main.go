@@ -12,7 +12,6 @@ import (
 	"github.com/tteeoo/mudcord/util"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/sirupsen/logrus"
 )
 
 // Token is the bot's authentication token which is obtained via environment variable
@@ -34,17 +33,17 @@ func main() {
 	defer bot.Close()
 
 	// Listen for ^C or other signals to stop
-	logrus.Info("mudcord starting")
+	util.Logger.Println("mudcord starting")
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
 	<-sc
 
-	logrus.Info("mudcord down")
+	util.Logger.Println("mudcord down")
 }
 
 func ready(s *discordgo.Session, event *discordgo.Ready) {
 
-	logrus.Info("mudcord ready")
+	util.Logger.Println("mudcord ready")
 
 	guilds := len(s.State.Guilds)
 
@@ -54,7 +53,7 @@ func ready(s *discordgo.Session, event *discordgo.Ready) {
 func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	defer func() {
 		if r := recover(); r != nil {
-			logrus.Warn("recovered from panic in messageCreate: ", r, "; message: #"+m.ID+": "+m.Content)
+			util.Logger.Println("recovered from panic in messageCreate: ", r, "; message: #"+m.ID+": "+m.Content)
 		}
 	}()
 

@@ -2,8 +2,6 @@ package util
 
 import (
 	"os"
-
-	"github.com/sirupsen/logrus"
 )
 
 // NoneDialog is generic text to print if a user deoes not have a character
@@ -26,7 +24,7 @@ var Colors = map[string]int{
 // CheckFatal checks if there is a fatal error, and exits accordingly
 func CheckFatal(err error) {
 	if err != nil {
-		logrus.Fatal(err)
+		Logger.Fatalln(err)
 		os.Exit(1)
 	}
 }
