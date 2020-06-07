@@ -10,10 +10,16 @@ type Context struct {
 
 // Reply is just shorthand to easily send a message in reply
 func (ctx *Context) Reply(message string) {
-	ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.Message.Author.Mention()+" "+message)
+	_, err := ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.Message.Author.Mention()+" "+message)
+	if err != nil {
+		Logger.Println("Failed to send message: " + err.Error())
+	}
 }
 
-// ReplyEmbed is just shorthand to easily send a message in reply
+// SendEmbed is just shorthand to easily send a message in reply
 func (ctx *Context) SendEmbed(embed discordgo.MessageEmbed) {
-	ctx.Session.ChannelMessageSendEmbed(ctx.Message.ChannelID, &embed)
+	_, err := ctx.Session.ChannelMessageSendEmbed(ctx.Message.ChannelID, &embed)
+	if err != nil {
+		Logger.Println("Failed to send embed: " + err.Error())
+	}
 }
