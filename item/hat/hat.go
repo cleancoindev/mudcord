@@ -49,4 +49,3 @@ func (item Hat) Desc() string {
 func (item Hat) Display() string {
 	return item.display
 }
-
