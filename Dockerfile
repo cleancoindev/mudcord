@@ -9,4 +9,4 @@ RUN go get github.com/sirupsen/logrus
 RUN go get github.com/bwmarrin/discordgo
 RUN go install .
 
-CMD ["app"]
+CMD ["mudcord"]
