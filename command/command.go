@@ -36,6 +36,7 @@ var Commands = map[string]Command{
 		MustStart: false,
 		NoCombat:  false,
 	},
+
 	// Room based option commands
 	"ops": {
 		Exec:      option.Ops,
@@ -61,6 +62,7 @@ var Commands = map[string]Command{
 		MustStart: true,
 		NoCombat:  true,
 	},
+
 	// Character based commands
 	"start": {
 		Exec:     character.Start,
@@ -72,6 +74,12 @@ var Commands = map[string]Command{
 		Help:      character.HatHelp,
 		MustStart: true,
 		NoCombat:  false,
+	},
+	"hatrm": {
+		Exec:      character.Hatrm,
+		Help:      character.HatrmHelp,
+		MustStart: true,
+		NoCombat:  true,
 	},
 	"arm": {
 		Exec:      character.Arm,
