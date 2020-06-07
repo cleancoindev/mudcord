@@ -2,8 +2,8 @@ package character
 
 import (
 	"github.com/tteeoo/mudcord/db"
-	"github.com/tteeoo/mudcord/util"
 	"github.com/tteeoo/mudcord/item"
+	"github.com/tteeoo/mudcord/util"
 )
 
 const HatrmHelp = "hatrm; Dequips your hat"

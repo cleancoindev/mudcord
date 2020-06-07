@@ -1,14 +1,14 @@
 package character
 
 import (
-	"strconv"
-	"strings"
 	"github.com/bwmarrin/discordgo"
 	"github.com/tteeoo/mudcord/db"
 	"github.com/tteeoo/mudcord/item"
 	"github.com/tteeoo/mudcord/item/weapon"
 	"github.com/tteeoo/mudcord/room"
 	"github.com/tteeoo/mudcord/util"
+	"strconv"
+	"strings"
 )
 
 const ArsHelp = "ars [weapon#]; Shows the weapons in your arsenal, optionally provide a weapon# to see info"
