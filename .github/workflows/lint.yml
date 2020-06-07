@@ -16,6 +16,8 @@ jobs:
 
       - name: Install dependencies
         run: go install
+
+      - name: Install golint
         run: go get -u golang.org/x/lint/golint
 
       - name: Run linters
