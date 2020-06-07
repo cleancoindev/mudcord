@@ -5,6 +5,8 @@ import (
 	"github.com/tteeoo/mudcord/command/misc"
 	"github.com/tteeoo/mudcord/command/option"
 	"github.com/tteeoo/mudcord/db"
+	"github.com/tteeoo/mudcord/item"
+	"github.com/tteeoo/mudcord/room"
 	"github.com/tteeoo/mudcord/util"
 )
 
@@ -144,6 +146,40 @@ func (cmd *Command) Run(ctx *util.Context) {
 		if !db.CheckStarted(ctx.Message.Author.ID) {
 			ctx.Reply(util.NoneDialog)
 			return
+		}
+
+		// Validate character
+		user, err := db.GetUser(ctx.Message.Author.ID)
+		if util.CheckDB(err, ctx) {
+			return
+		}
+
+		_, ok := item.Items[user.Hat]
+		if !ok {
+			util.InvalidChar(user.Hat, ctx)
+			return
+		}
+
+		_, ok = room.Rooms[user.Room]
+		if !ok {
+			util.InvalidChar(user.Room, ctx)
+			return
+		}
+
+		for _, value := range user.Inv {
+			_, ok := item.Items[value.ID]
+			if !ok {
+				util.InvalidChar(value.ID, ctx)
+				return
+			}
+		}
+
+		for _, value := range user.Arsenal {
+			_, ok := item.Items[value]
+			if !ok {
+				util.InvalidChar(value, ctx)
+				return
+			}
 		}
 	}
 

@@ -40,3 +40,9 @@ func CheckDB(err error, ctx *Context) bool {
 
 	return false
 }
+
+// InvalidChar will alert the user that their character is invalid
+func InvalidChar(item string, ctx *Context) {
+	Logger.Println("Invalid character: " + ctx.Message.Author.ID + ": " + item)
+	ctx.Reply("your character has an invalid value, please report this to <@258771223473815553>: ```" + item + "```")
+}
