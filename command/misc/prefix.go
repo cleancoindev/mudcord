@@ -30,8 +30,12 @@ func Prefix(ctx *util.Context) {
 	}
 	newPrefix := contentSplit[1]
 
-	server, _ := db.GetServer(ctx.Message.GuildID)
+	server, err := db.GetServer(ctx.Message.GuildID)
+	if util.CheckDB(err, ctx) {
+		return
+	}
 	server.Prefix = newPrefix
-	db.SetServer(server)
 	ctx.Reply("set the prefix to " + newPrefix)
+	err = db.SetServer(server)
+	util.CheckDB(err, ctx)
 }

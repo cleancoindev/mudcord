@@ -12,7 +12,10 @@ const HatHelp = "hat; Shows info about your equipped hat"
 
 func Hat(ctx *util.Context) {
 
-	user, _ := db.GetUser(ctx.Message.Author.ID)
+	user, err := db.GetUser(ctx.Message.Author.ID)
+	if util.CheckDB(err, ctx) {
+		return
+	}
 	currentRoom := room.Rooms[user.Room]
 
 	// Send message if empty

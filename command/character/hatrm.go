@@ -10,7 +10,10 @@ const HatrmHelp = "hatrm; Dequips your hat"
 
 func Hatrm(ctx *util.Context) {
 
-	user, _ := db.GetUser(ctx.Message.Author.ID)
+	user, err := db.GetUser(ctx.Message.Author.ID)
+	if util.CheckDB(err, ctx) {
+		return
+	}
 
 	// Send message if empty
 	if user.Hat == "None" {
@@ -23,5 +26,6 @@ func Hatrm(ctx *util.Context) {
 	user.AddItem(user.Hat, 1)
 	user.Wear("None")
 
-	db.SetUser(user)
+	err = db.SetUser(user)
+	util.CheckDB(err, ctx)
 }

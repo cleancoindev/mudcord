@@ -13,7 +13,10 @@ const UseHelp = "use <item#>; uses an item from your inventory"
 
 func Use(ctx *util.Context) {
 
-	user, _ := db.GetUser(ctx.Message.Author.ID)
+	user, err := db.GetUser(ctx.Message.Author.ID)
+	if util.CheckDB(err, ctx) {
+		return
+	}
 
 	// Get item number from message and return if it is not a number
 	num, err := strconv.Atoi(strings.Split(ctx.Message.Content, " ")[len(strings.Split(ctx.Message.Content, " "))-1:][0])

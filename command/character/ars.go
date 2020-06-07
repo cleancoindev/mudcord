@@ -15,7 +15,10 @@ const ArsHelp = "ars [weapon#]; Shows the weapons in your arsenal, optionally pr
 
 func Ars(ctx *util.Context) {
 
-	user, _ := db.GetUser(ctx.Message.Author.ID)
+	user, err := db.GetUser(ctx.Message.Author.ID)
+	if util.CheckDB(err, ctx) {
+		return
+	}
 	currentRoom := room.Rooms[user.Room]
 
 	// Send message if empty

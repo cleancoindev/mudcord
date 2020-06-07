@@ -148,7 +148,11 @@ func (cmd *Command) Run(ctx *util.Context) {
 	}
 
 	if cmd.NoCombat {
-		user, _ := db.GetUser(ctx.Message.Author.ID)
+		user, err := db.GetUser(ctx.Message.Author.ID)
+		if util.CheckDB(err, ctx) {
+			return
+		}
+
 		if user.Combat {
 			ctx.Reply(util.NoneCombat)
 			return

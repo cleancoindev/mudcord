@@ -14,7 +14,10 @@ const OpsHelp = "ops; shows currentRoom.specific options"
 func Ops(ctx *util.Context) {
 
 	// Get the players current room
-	user, _ := db.GetUser(ctx.Message.Author.ID)
+	user, err := db.GetUser(ctx.Message.Author.ID)
+	if util.CheckDB(err, ctx) {
+		return
+	}
 	currentRoom := room.Rooms[user.Room]
 
 	// Initialize fields slice

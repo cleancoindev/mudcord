@@ -14,7 +14,10 @@ const StatusHelp = "status; displays your character's status"
 func Status(ctx *util.Context) {
 
 	// Get the current user and room
-	user, _ := db.GetUser(ctx.Message.Author.ID)
+	user, err := db.GetUser(ctx.Message.Author.ID)
+	if util.CheckDB(err, ctx) {
+		return
+	}
 	currentRoom := room.Rooms[user.Room]
 
 	// Make the fields

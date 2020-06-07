@@ -13,7 +13,10 @@ const GoHelp = "go <room#>; goes to a specific room"
 
 func Go(ctx *util.Context) {
 
-	user, _ := db.GetUser(ctx.Message.Author.ID)
+	user, err := db.GetUser(ctx.Message.Author.ID)
+	if util.CheckDB(err, ctx) {
+		return
+	}
 
 	// Get the players current room
 	currentRoom := room.Rooms[user.Room]
@@ -34,5 +37,6 @@ func Go(ctx *util.Context) {
 
 	ctx.Reply(room.Rooms[currentRoom.Rooms[num]].Into)
 	user.Room = currentRoom.Rooms[num]
-	db.SetUser(user)
+	err = db.SetUser(user)
+	util.CheckDB(err, ctx)
 }

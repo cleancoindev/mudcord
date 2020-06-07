@@ -25,11 +25,15 @@ func (item Weapon) Inspect() []*discordgo.MessageEmbedField {
 }
 
 func (item Weapon) Use(ctx *util.Context) {
-	user, _ := db.GetUser(ctx.Message.Author.ID)
+	user, err := db.GetUser(ctx.Message.Author.ID)
+	if util.CheckDB(err, ctx) {
+		return
+	}
 	if user.AddArs(item.ID) {
 		ctx.Reply("moved **" + item.display + "** from your inventory to your weapons arsenal")
 		user.RemoveItem(item.ID)
-		db.SetUser(user)
+		err = db.SetUser(user)
+		util.CheckDB(err, ctx)
 		return
 	}
 

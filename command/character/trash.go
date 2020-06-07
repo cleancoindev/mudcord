@@ -13,7 +13,10 @@ const TrashHelp = "trash <item#> [amount]; removes an item or items from your in
 
 func Trash(ctx *util.Context) {
 
-	user, _ := db.GetUser(ctx.Message.Author.ID)
+	user, err := db.GetUser(ctx.Message.Author.ID)
+	if util.CheckDB(err, ctx) {
+		return
+	}
 
 	// Get item number from message and return if it is not a number
 	if len(strings.Split(ctx.Message.Content, " ")) <= 1 {
@@ -52,7 +55,7 @@ func Trash(ctx *util.Context) {
 		user.RemoveItem(user.Inv[num].ID)
 	}
 
-	db.SetUser(user)
-
 	ctx.Reply("removed " + strconv.Itoa(amount) + " **" + currentItem.Display() + "** from your inventory")
+	err = db.SetUser(user)
+	util.CheckDB(err, ctx)
 }

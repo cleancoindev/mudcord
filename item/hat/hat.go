@@ -27,19 +27,25 @@ var hats = map[string]Hat{
 }
 
 func (item Hat) Use(ctx *util.Context) {
-	user, _ := db.GetUser(ctx.Message.Author.ID)
+	user, err := db.GetUser(ctx.Message.Author.ID)
+	if util.CheckDB(err, ctx) {
+		return
+	}
+
 	oldHat := user.Wear(item.ID)
 	user.RemoveItem(item.ID)
 
 	if oldHat != "None" {
 		ctx.Reply("equipped **" + item.display + "** and unequipped **" + hats[oldHat].display + "**")
 		user.AddItem(oldHat, 1)
-		db.SetUser(user)
+		err = db.SetUser(user)
+		util.CheckDB(err, ctx)
 		return
 	}
 
 	ctx.Reply("equipped **" + item.display + "**")
-	db.SetUser(user)
+	err = db.SetUser(user)
+	util.CheckDB(err, ctx)
 }
 
 func (item Hat) Desc() string {

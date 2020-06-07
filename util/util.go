@@ -28,3 +28,15 @@ func CheckFatal(err error) {
 		os.Exit(1)
 	}
 }
+
+// CheckDB checks DB errors
+// returns true if err != nil
+func CheckDB(err error, ctx *Context) bool {
+	if err != nil {
+		Logger.Println("DB error: " + err.Error())
+		ctx.Reply("a database error occurred, please report this to <@258771223473815553>: ```" + err.Error() + "```")
+		return true
+	}
+
+	return false
+}

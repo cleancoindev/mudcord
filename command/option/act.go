@@ -13,7 +13,10 @@ const ActHelp = "act <action#>; does a room specific action"
 
 func Act(ctx *util.Context) {
 
-	user, _ := db.GetUser(ctx.Message.Author.ID)
+	user, err := db.GetUser(ctx.Message.Author.ID)
+	if util.CheckDB(err, ctx) {
+		return
+	}
 
 	// Get the players current room
 	currentRoom := room.Rooms[user.Room]

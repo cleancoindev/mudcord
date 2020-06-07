@@ -16,7 +16,11 @@ var Canteen = Consumable{
 }
 
 func UseCanteen(ctx *util.Context) {
-	user, _ := db.GetUser(ctx.Message.Author.ID)
+	user, err := db.GetUser(ctx.Message.Author.ID)
+	if util.CheckDB(err, ctx) {
+		return
+	}
+
 	healed := user.Heal(2)
 	if healed == 0 {
 		ctx.Reply("you are already at full health")
@@ -25,5 +29,6 @@ func UseCanteen(ctx *util.Context) {
 
 	ctx.Reply("you chug down the water inside, healing " + strconv.Itoa(healed) + " health")
 	user.RemoveItem("Canteen")
-	db.SetUser(user)
+	err = db.SetUser(user)
+	util.CheckDB(err, ctx)
 }

@@ -15,7 +15,10 @@ const ItemHelp = "item <item#>; displays more information about an item in your 
 
 func Item(ctx *util.Context) {
 
-	user, _ := db.GetUser(ctx.Message.Author.ID)
+	user, err := db.GetUser(ctx.Message.Author.ID)
+	if util.CheckDB(err, ctx) {
+		return
+	}
 	currentRoom := room.Rooms[user.Room]
 
 	// Get item number from message and return if it is not a number

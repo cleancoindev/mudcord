@@ -62,12 +62,24 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
-	// Check if the server is not is Servers and add it
-	if !db.CheckServer(m.GuildID) {
-		db.NewServer(m.GuildID)
+	// Create context struct
+	ctx := &util.Context{
+		Session: s,
+		Message: m,
 	}
 
-	server, _ := db.GetServer(m.GuildID)
+	// Check if the server is not is Servers and add it
+	if !db.CheckServer(m.GuildID) {
+		_, err := db.NewServer(m.GuildID)
+		if util.CheckDB(err, ctx) {
+			return
+		}
+	}
+
+	server, err := db.GetServer(m.GuildID)
+	if util.CheckDB(err, ctx) {
+		return
+	}
 
 	prefix := server.Prefix
 
@@ -77,22 +89,13 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		for _, cmd := range command.Commands {
 			message += "" + cmd.Help + "\n"
 		}
-		ctx := util.Context{
-			Session: s,
-			Message: m,
-		}
 		ctx.Reply(message + "```")
 	}
 
 	// Check and run commands
 	for name, cmd := range command.Commands {
 		if prefix+name == strings.Split(m.Content, " ")[0] {
-			ctx := util.Context{
-				Session: s,
-				Message: m,
-			}
-
-			cmd.Run(&ctx)
+			cmd.Run(ctx)
 			return
 		}
 	}

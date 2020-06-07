@@ -14,7 +14,10 @@ const ArmHelp = "arm <weapon#>; moves a weapon from your weapons arsenal to your
 
 func Arm(ctx *util.Context) {
 
-	user, _ := db.GetUser(ctx.Message.Author.ID)
+	user, err := db.GetUser(ctx.Message.Author.ID)
+	if util.CheckDB(err, ctx) {
+		return
+	}
 
 	// Get the players arsenal
 	ars := user.Arsenal
@@ -37,5 +40,6 @@ func Arm(ctx *util.Context) {
 	user.RemoveArs(currentWeapon)
 	user.AddItem(currentWeapon, 1)
 	ctx.Reply("moved **" + item.Items[currentWeapon].(weapon.Weapon).Display() + "** from your weapons arsenal to your inventory")
-	db.SetUser(user)
+	err = db.SetUser(user)
+	util.CheckDB(err, ctx)
 }

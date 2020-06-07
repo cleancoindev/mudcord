@@ -24,9 +24,15 @@ func (item Consumable) Inspect() []*discordgo.MessageEmbedField {
 
 func (item Consumable) Use(ctx *util.Context) {
 	item.consume(ctx)
-	user, _ := db.GetUser(ctx.Message.Author.ID)
+	user, err := db.GetUser(ctx.Message.Author.ID)
+	if util.CheckDB(err, ctx) {
+		return
+	}
+
 	user.RemoveItem(item.ID)
-	db.SetUser(user)
+
+	err = db.SetUser(user)
+	util.CheckDB(err, ctx)
 }
 
 func (item Consumable) Desc() string {

@@ -9,6 +9,9 @@ const DeleteHelp = "delete; deletes your character data"
 
 func Delete(ctx *util.Context) {
 
-	db.DeleteUser(ctx.Message.Author.ID)
+	err := db.DeleteUser(ctx.Message.Author.ID)
+	if util.CheckDB(err, ctx) {
+		return
+	}
 	ctx.Reply("successfully deleted your character, run `start` to start a new one")
 }
