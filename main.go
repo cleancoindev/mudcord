@@ -98,7 +98,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	for name, cmd := range command.Commands {
 		if prefix+name == strings.Split(m.Content, " ")[0] {
 			cmd.Run(ctx)
-			util.Logger.Println("Command: " + ctx.Message.Author.ID + ": " + prefix + name)
+			util.Logger.Println("Command: " + ctx.Message.Author.ID + ": " + ctx.Message.Content)
 			return
 		}
 	}
