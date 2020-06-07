@@ -155,7 +155,7 @@ func (cmd *Command) Run(ctx *util.Context) {
 		}
 
 		_, ok := item.Items[user.Hat]
-		if !ok {
+		if !ok && user.Hat != "None" {
 			util.InvalidChar(user.Hat, ctx)
 			return
 		}
