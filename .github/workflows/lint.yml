@@ -17,13 +17,8 @@ jobs:
       - name: Install dependencies
         run: go install
 
-      - name: Install golint
-        run: go get -u golang.org/x/lint/golint
-
       - name: Run linters
         uses: samuelmeuli/lint-action@v1
         with:
           gofmt: true
           gofmt_args: "-s -w -e -l ."
-          golint: true
-          golint_args: "./..."
