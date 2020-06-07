@@ -20,7 +20,7 @@ func init() {
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(os.Getenv("MUDCORD_MONGO_URI")))
 	util.CheckFatal(err)
 
-	util.Logger.Println("connected to db")
+	util.Logger.Println("Connected to db")
 
 	users = client.Database("mudcord").Collection("users")
 	servers = client.Database("mudcord").Collection("servers")

@@ -19,6 +19,7 @@ var Token string = os.Getenv("MUDCORD_TOKEN")
 
 func main() {
 	defer db.Cancel()
+	defer util.LogFile.Close()
 
 	// Make bot
 	bot, err := discordgo.New("Bot " + Token)
@@ -90,12 +91,14 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 			message += "" + cmd.Help + "\n"
 		}
 		ctx.Reply(message + "```")
+		util.Logger.Println("Command: " + ctx.Message.Author.ID + ": " + prefix + "help")
 	}
 
 	// Check and run commands
 	for name, cmd := range command.Commands {
 		if prefix+name == strings.Split(m.Content, " ")[0] {
 			cmd.Run(ctx)
+			util.Logger.Println("Command: " + ctx.Message.Author.ID + ": " + prefix + name)
 			return
 		}
 	}

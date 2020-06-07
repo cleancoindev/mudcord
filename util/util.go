@@ -33,7 +33,7 @@ func CheckFatal(err error) {
 // returns true if err != nil
 func CheckDB(err error, ctx *Context) bool {
 	if err != nil {
-		Logger.Println("DB error: " + err.Error())
+		Logger.Println("DB error: " + ctx.Message.Author.ID + ": " + err.Error())
 		ctx.Reply("a database error occurred, please report this to <@258771223473815553>: ```" + err.Error() + "```")
 		return true
 	}
