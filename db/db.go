@@ -108,7 +108,7 @@ func NewUser(id string) (*User, error) {
 		MP:      [2]int{20, 20},
 		Gold:    0,
 		Room:    "RoomGreatMarya",
-		Hat:     "HatNone",
+		Hat:     "None",
 		Inv:     []*ItemQuan{{ID: "ConsumableCanteen", Quan: 1}},
 		Arsenal: []string{"WeaponWoodSword"},
 	}

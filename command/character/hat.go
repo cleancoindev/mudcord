@@ -16,7 +16,7 @@ func Hat(ctx *util.Context) {
 	currentRoom := room.Rooms[user.Room]
 
 	// Send message if empty
-	if user.Hat == "NoneHat" {
+	if user.Hat == "None" {
 		ctx.Reply("you are not wearing a hat")
 		return
 	}

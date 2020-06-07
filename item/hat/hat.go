@@ -25,7 +25,7 @@ func (item Hat) Use(ctx *util.Context) {
 	oldHat := user.Wear(item.ID)
 	user.RemoveItem(item.ID)
 
-	if oldHat != "NoneHat" {
+	if oldHat != "None" {
 		ctx.Reply("equipped **" + item.display + "** and unequipped **" + oldHat + "**")
 		user.AddItem(oldHat, 1)
 		db.SetUser(user)

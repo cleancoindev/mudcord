@@ -13,7 +13,7 @@ func Hatrm(ctx *util.Context) {
 	user, _ := db.GetUser(ctx.Message.Author.ID)
 
 	// Send message if empty
-	if user.Hat == "NoneHat" {
+	if user.Hat == "None" {
 		ctx.Reply("you are not wearing a hat")
 		return
 	}
@@ -21,7 +21,7 @@ func Hatrm(ctx *util.Context) {
 	// Change hats
 	ctx.Reply("dequipped **" + item.Items[user.Hat].Display() + "**")
 	user.AddItem(user.Hat, 1)
-	user.Wear("NoneHat")
+	user.Wear("None")
 
 	db.SetUser(user)
 }
