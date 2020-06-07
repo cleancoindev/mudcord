@@ -3,6 +3,7 @@ package item
 import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/tteeoo/mudcord/item/consumable"
+	"github.com/tteeoo/mudcord/item/hat"
 	"github.com/tteeoo/mudcord/item/weapon"
 	"github.com/tteeoo/mudcord/util"
 )
@@ -19,4 +20,5 @@ type Item interface {
 var Items = map[string]Item{
 	consumable.Canteen.ID: consumable.Canteen,
 	weapon.WoodSword.ID:   weapon.WoodSword,
+	hat.Bucket.ID:         hat.Bucket,
 }

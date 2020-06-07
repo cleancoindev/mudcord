@@ -40,6 +40,14 @@ func (user *User) AddItem(id string, quan int) {
 	user.Inv = append(user.Inv, &ItemQuan{ID: id, Quan: quan})
 }
 
+// Wear will equip a hat onto a user
+// returns the id of the previous hat
+func (user *User) Wear(id string) string {
+	tempHat := user.Hat
+	user.Hat = id
+	return tempHat
+}
+
 // AddArs will attempt to add an item to a users arsenal
 // returns false if arsenal is full
 func (user *User) AddArs(id string) bool {

@@ -85,6 +85,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		ctx.Reply(message + "```")
 	}
 
+	// Check and run commands
 	for name, cmd := range command.Commands {
 		if prefix+name == strings.Split(m.Content, " ")[0] {
 			ctx := util.Context{
