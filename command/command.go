@@ -67,6 +67,12 @@ var Commands = map[string]Command{
 		Help:     character.StartHelp,
 		NoCombat: false,
 	},
+	"hat": {
+		Exec:      character.Hat,
+		Help:      character.HatHelp,
+		MustStart: true,
+		NoCombat:  false,
+	},
 	"arm": {
 		Exec:      character.Arm,
 		Help:      character.ArmHelp,
