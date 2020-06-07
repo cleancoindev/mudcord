@@ -6,4 +6,4 @@
 
 A [multi-user dungeon](https://en.wikipedia.org/wiki/MUD) in Discord.
 
-Currently very WIP.
+Currently a work in progress.
