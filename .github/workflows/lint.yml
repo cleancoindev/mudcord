@@ -16,6 +16,7 @@ jobs:
 
       - name: Install dependencies
         run: go install
+        run: go get -u golang.org/x/lint/golint
 
       - name: Run linters
         uses: samuelmeuli/lint-action@v1
