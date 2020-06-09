@@ -14,9 +14,8 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-// Token is the bot's authentication token which is obtained via environment variable
-
 func main() {
+
 	defer db.Cancel()
 	defer util.LogFile.Close()
 
