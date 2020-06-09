@@ -1,6 +1,7 @@
 package room
 
 import (
+	"github.com/tteeoo/mudcord/enemy"
 	"github.com/tteeoo/mudcord/room/action"
 	"github.com/tteeoo/mudcord/room/npc"
 )
@@ -17,4 +18,22 @@ type Room struct {
 var Rooms = map[string]Room{
 	RoomGreatMarya.ID: RoomGreatMarya,
 	RoomWestDocks.ID:  RoomWestDocks,
+}
+
+type enemyRate struct {
+	percent int
+	monster enemy.Enemy
+}
+
+type encounterRate struct {
+	mainPercent int
+	enemies     []enemyRate
+}
+
+// Types maps room type strings to encounters
+var Types = map[string]encounterRate{
+	"Town": {
+		mainPercent: 0,
+		enemies:     []enemyRate{},
+	},
 }
