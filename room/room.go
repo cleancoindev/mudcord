@@ -4,6 +4,8 @@ import (
 	"github.com/tteeoo/mudcord/enemy"
 	"github.com/tteeoo/mudcord/room/action"
 	"github.com/tteeoo/mudcord/room/npc"
+	"time"
+	"math/rand"
 )
 
 // Room represents a generic Room
@@ -20,20 +22,30 @@ var Rooms = map[string]Room{
 	RoomWestDocks.ID:  RoomWestDocks,
 }
 
-type enemyRate struct {
-	percent int
-	monster enemy.Enemy
-}
-
 type encounterRate struct {
-	mainPercent int
-	enemies     []enemyRate
+	percent int
+	enemies     []enemy.Enemy
 }
 
 // Types maps room type strings to encounters
-var Types = map[string]encounterRate{
+var types = map[string]encounterRate{
 	"Town": {
-		mainPercent: 0,
-		enemies:     []enemyRate{},
+		percent: 0,
+		enemies:    []enemy.Enemy{},
 	},
+}
+
+// GetEnemy gets a random enemy (or none) based on a room's type
+func (room *Room) GetEnemy() enemy.Enemy {
+	enc := types[room.Type]
+
+	rand.Seed(time.Now().Unix())
+	num := rand.Intn(100)
+	if num < enc.percent {
+		return enc.enemies[rand.Intn(len(enc.enemies))]
+	}
+
+	return enemy.Enemy{
+	    Name: "None",
+	}
 }
