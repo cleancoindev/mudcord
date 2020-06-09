@@ -8,6 +8,7 @@ type User struct {
 	Combat          bool
 	Inv             []*ItemQuan
 	Arsenal         []string
+	History         []string
 }
 
 // RemoveItem will either remove an item from a users inventory or decrement the quantity

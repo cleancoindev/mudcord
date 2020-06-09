@@ -4,8 +4,8 @@ import (
 	"github.com/tteeoo/mudcord/enemy"
 	"github.com/tteeoo/mudcord/room/action"
 	"github.com/tteeoo/mudcord/room/npc"
-	"time"
 	"math/rand"
+	"time"
 )
 
 // Room represents a generic Room
@@ -24,14 +24,20 @@ var Rooms = map[string]Room{
 
 type encounterRate struct {
 	percent int
-	enemies     []enemy.Enemy
+	enemies []enemy.Enemy
 }
 
 // Types maps room type strings to encounters
 var types = map[string]encounterRate{
 	"Town": {
 		percent: 0,
-		enemies:    []enemy.Enemy{},
+	},
+	"Path": {
+		percent: 25,
+		enemies: []enemy.Enemy{
+			enemy.Slime,
+			enemy.Zombie,
+		},
 	},
 }
 
@@ -46,6 +52,6 @@ func (room *Room) GetEnemy() enemy.Enemy {
 	}
 
 	return enemy.Enemy{
-	    Name: "None",
+		Name: "None",
 	}
 }
