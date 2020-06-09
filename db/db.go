@@ -19,7 +19,7 @@ func init() {
 
 	mongoURI := os.Getenv("MUDCORD_MONGO_URI")
 	if mongoURI == "" {
-	    util.Logger.Fatal("MUDCORD_MONGO_URI in environment")
+		util.Logger.Fatal("MUDCORD_MONGO_URI not in environment")
 	}
 
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(mongoURI))

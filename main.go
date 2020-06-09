@@ -22,7 +22,7 @@ func main() {
 
 	token := os.Getenv("MUDCORD_TOKEN")
 	if token == "" {
-	    util.Logger.Fatal("MUDCORD_TOKEN in environment")
+		util.Logger.Fatal("MUDCORD_TOKEN not in environment")
 	}
 
 	// Make bot
