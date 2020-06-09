@@ -15,14 +15,18 @@ import (
 )
 
 // Token is the bot's authentication token which is obtained via environment variable
-var Token string = os.Getenv("MUDCORD_TOKEN")
 
 func main() {
 	defer db.Cancel()
 	defer util.LogFile.Close()
 
+	token := os.Getenv("MUDCORD_TOKEN")
+	if token == "" {
+	    util.Logger.Fatal("MUDCORD_TOKEN in environment")
+	}
+
 	// Make bot
-	bot, err := discordgo.New("Bot " + Token)
+	bot, err := discordgo.New("Bot " + token)
 	util.CheckFatal(err)
 
 	// Add handlers

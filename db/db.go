@@ -17,7 +17,12 @@ var servers *mongo.Collection
 func init() {
 	ctx, Cancel = context.WithCancel(context.Background())
 
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI(os.Getenv("MUDCORD_MONGO_URI")))
+	mongoURI := os.Getenv("MUDCORD_MONGO_URI")
+	if mongoURI == "" {
+	    util.Logger.Fatal("MUDCORD_MONGO_URI in environment")
+	}
+
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(mongoURI))
 	util.CheckFatal(err)
 
 	util.Logger.Println("Connected to db")
