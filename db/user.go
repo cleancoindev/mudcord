@@ -1,5 +1,9 @@
 package db
 
+import (
+	"github.com/tteeoo/mudcord/enemy"
+)
+
 // User represents a character
 type User struct {
 	ID, Room, Hat   string
@@ -9,6 +13,7 @@ type User struct {
 	Inv             []*ItemQuan
 	Arsenal         []string
 	History         []string
+	Facing []enemy.Enemy
 }
 
 // RemoveItem will either remove an item from a users inventory or decrement the quantity

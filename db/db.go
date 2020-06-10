@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 	"github.com/tteeoo/mudcord/util"
+	"github.com/tteeoo/mudcord/enemy"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -115,6 +116,8 @@ func NewUser(id string) (*User, error) {
 		Hat:     "None",
 		Inv:     []*ItemQuan{{ID: "ConsumableCanteen", Quan: 1}},
 		Arsenal: []string{"WeaponWoodSword"},
+		History: []string{},
+		Facing:  []enemy.Enemy{},
 	}
 	_, err := users.InsertOne(ctx, user)
 

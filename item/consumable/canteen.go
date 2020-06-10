@@ -12,10 +12,10 @@ var Canteen = Consumable{
 	desc:         "A shiny, refillable container; heals up to two HP",
 	ID:           "ConsumableCanteen",
 	CombatUsable: true,
-	consume:      UseCanteen,
+	consume:      useCanteen,
 }
 
-func UseCanteen(ctx *util.Context) {
+func useCanteen(ctx *util.Context) {
 	user, err := db.GetUser(ctx.Message.Author.ID)
 	if util.CheckDB(err, ctx) {
 		return

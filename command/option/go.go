@@ -42,6 +42,7 @@ func Go(ctx *util.Context) {
 	enemy := newRoom.GetEnemy()
 	if enemy.Name != "None" {
 		user.Combat = true
+		user.Facing = append(user.Facing, enemy)
 		ctx.Reply("you come into combat with a **" + enemy.Name + "**!")
 	}
 
