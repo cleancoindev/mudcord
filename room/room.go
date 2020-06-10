@@ -20,6 +20,7 @@ type Room struct {
 var Rooms = map[string]Room{
 	RoomGreatMarya.ID: RoomGreatMarya,
 	RoomWestDocks.ID:  RoomWestDocks,
+	RoomTestingPath.ID:  RoomTestingPath,
 }
 
 type encounterRate struct {

@@ -28,8 +28,13 @@ func (item Consumable) Use(ctx *util.Context) {
 	if util.CheckDB(err, ctx) {
 		return
 	}
+	if user.Combat {
+		if !item.CombatUsable {
+			ctx.Reply(util.NoneCombat)
+			return
+		}
+	}
 
-	user.RemoveItem(item.ID)
 
 	err = db.SetUser(user)
 	util.CheckDB(err, ctx)

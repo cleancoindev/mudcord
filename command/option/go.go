@@ -37,6 +37,14 @@ func Go(ctx *util.Context) {
 
 	ctx.Reply(room.Rooms[currentRoom.Rooms[num]].Into)
 	user.Room = currentRoom.Rooms[num]
+
+	newRoom := room.Rooms[user.Room]
+	enemy := newRoom.GetEnemy()
+	if enemy.Name != "None" {
+		user.Combat = true
+		ctx.Reply("you come into combat with a **" + enemy.Name + "**!")
+	}
+
 	err = db.SetUser(user)
 	util.CheckDB(err, ctx)
 }

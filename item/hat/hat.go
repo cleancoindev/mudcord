@@ -31,6 +31,10 @@ func (item Hat) Use(ctx *util.Context) {
 	if util.CheckDB(err, ctx) {
 		return
 	}
+	if user.Combat {
+		ctx.Reply(util.NoneCombat)
+		return
+	}
 
 	oldHat := user.Wear(item.ID)
 	user.RemoveItem(item.ID)

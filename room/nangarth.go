@@ -14,7 +14,20 @@ var RoomGreatMarya = Room{
 	Color:   "blue",
 	Type:    "Town",
 	NPCs:    []npc.NPC{npc.NPCKris},
-	Rooms:   []string{"RoomWestDocks"},
+	Rooms:   []string{"RoomWestDocks", "RoomTestingPath"},
+	Actions: []action.Action{},
+}
+
+// RoomTestingPath is a room for testing
+var RoomTestingPath = Room{
+	ID:      "RoomTestingPath",
+	Into:    "what is this?",
+	Display: "Testing Path",
+	Desc:    "This room is for testing",
+	Color:   "green",
+	Type:    "Path",
+	NPCs:    []npc.NPC{},
+	Rooms:   []string{"RoomGreatMarya"},
 	Actions: []action.Action{},
 }
 

@@ -29,6 +29,10 @@ func (item Weapon) Use(ctx *util.Context) {
 	if util.CheckDB(err, ctx) {
 		return
 	}
+	if user.Combat {
+		ctx.Reply(util.NoneCombat)
+		return
+	}
 	if user.AddArs(item.ID) {
 		ctx.Reply("moved **" + item.display + "** from your inventory to your weapons arsenal")
 		user.RemoveItem(item.ID)
