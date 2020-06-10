@@ -16,7 +16,7 @@ import (
 
 func main() {
 
-	defer db.Cancel(
+	defer db.Cancel()
 	defer util.LogFile.Close()
 
 	token := os.Getenv("MUDCORD_TOKEN")
