@@ -35,7 +35,6 @@ func (item Consumable) Use(ctx *util.Context) {
 		}
 	}
 
-
 	err = db.SetUser(user)
 	util.CheckDB(err, ctx)
 }
