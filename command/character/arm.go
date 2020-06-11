@@ -21,6 +21,10 @@ func Arm(ctx *util.Context) {
 
 	// Get the players arsenal
 	ars := user.Arsenal
+	if len(ars) <= 1 {
+		ctx.Reply("you need to always have atleast one weapon in your arsenal")
+		return
+	}
 
 	// Get action number from message and return if it is not a number
 	num, err := strconv.Atoi(strings.Split(ctx.Message.Content, " ")[len(strings.Split(ctx.Message.Content, " "))-1:][0])
