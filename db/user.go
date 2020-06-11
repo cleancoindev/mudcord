@@ -13,7 +13,7 @@ type User struct {
 	Inv             []*ItemQuan
 	Arsenal         []string
 	History         []string
-	Facing []enemy.Enemy
+	Facing          []enemy.Enemy
 }
 
 // RemoveItem will either remove an item from a users inventory or decrement the quantity

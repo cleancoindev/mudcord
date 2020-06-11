@@ -2,8 +2,8 @@ package db
 
 import (
 	"context"
-	"github.com/tteeoo/mudcord/util"
 	"github.com/tteeoo/mudcord/enemy"
+	"github.com/tteeoo/mudcord/util"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
