@@ -19,8 +19,25 @@ type Enemy struct {
 	History    []string
 }
 
-// GetAttack chooses a random attack from an enemy
+// GetAttack chooses a random attack from an enemy, taking into
 func (enemy *Enemy) GetAttack() Attack {
-	rand.Seed(time.Now().Unix())
-	return enemy.Attacks[rand.Intn(len(enemy.Attacks))]
+	var checked []Attack
+	for ; len(checked) == len(enemy.Attacks) ; {
+		rand.Seed(time.Now().Unix())
+		attack := enemy.Attacks[rand.Intn(len(enemy.Attacks))]
+		checked = append(checked, attack)
+		cooldown := 3 - attack.Speed
+		used := false
+		for _, name := range enemy.History[len(enemy.History) - cooldown:len(enemy.History)] {
+			if name == attack.Name {
+				used = true
+			}
+		}
+		if !used {
+			return attack
+		}
+	}
+	return Attack{
+		Name: "None",
+	}
 }
