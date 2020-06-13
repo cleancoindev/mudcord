@@ -7,6 +7,7 @@ import (
 	"github.com/tteeoo/mudcord/db"
 	"github.com/tteeoo/mudcord/item"
 	"github.com/tteeoo/mudcord/item/consumable"
+	"github.com/tteeoo/mudcord/item/weapon"
 	"github.com/tteeoo/mudcord/room"
 	"github.com/tteeoo/mudcord/util"
 )
@@ -51,12 +52,25 @@ func Ops(ctx *util.Context) {
 			fields = append(fields, &discordgo.MessageEmbedField{Name: "NPCs", Value: npcsValue, Inline: false})
 		}
 	} else {
+
+		// Ensure user contains an enemy struct
 		if len(user.Facing) < 1 {
 			ctx.Reply("an error occurred, please report this to <@258771223473815553>: ```" + user.ID + " has len(user.Facing) < 1```")
 			return
 		}
+
+		// Display combat info
 		fields = append(fields, &discordgo.MessageEmbedField{Name: "You are in combat", Value: "**" + user.Facing[0].Name + "**: " + user.Facing[0].Desc, Inline: false})
-		fields = append(fields, &discordgo.MessageEmbedField{Name: "Flee", Value: "run `flee` to try and run away", Inline: false})
+
+		// Display pass command
+		fields = append(fields, &discordgo.MessageEmbedField{Name: "Pass", Value: "run `pass` to skip your turn", Inline: false})
+
+		// Display flee command if you haven't already tried to flee
+		if !user.Facing[0].Fleed {
+			fields = append(fields, &discordgo.MessageEmbedField{Name: "Flee", Value: "run `flee` to try and run away", Inline: false})
+		}
+
+		// Display usable items if you have > 0
 		var itemCount int
 		for _, v := range user.Inv {
 			currentItem := item.Items[v.ID]
@@ -67,12 +81,27 @@ func Ops(ctx *util.Context) {
 				}
 			}
 		}
-		fields = append(fields, &discordgo.MessageEmbedField{Name: "Items", Value: "you have " + strconv.Itoa(itemCount) + " item(s) that you can use while in combat", Inline: false})
+		if itemCount > 0 {
+			fields = append(fields, &discordgo.MessageEmbedField{Name: "Items", Value: "you have " + strconv.Itoa(itemCount) + " item(s) that you can use while in combat", Inline: false})
+		}
+
+		// Display weapons that are not on cooldown
 		attackValue := "run `attack #` to use a weapon\n"
 		for i, v := range user.Arsenal {
-			attackValue += "**" + strconv.Itoa(i+1) + ".**\t" + item.Items[v].Display() + "\n"
+			cooldown := 3 - item.Items[v].(weapon.Weapon).Speed
+			used := false
+			for _, name := range user.History[len(user.History)-cooldown : len(user.History)] {
+				if name == item.Items[v].Display() {
+					used = true
+				}
+			}
+			if !used {
+				attackValue += "**" + strconv.Itoa(i+1) + ".**\t" + item.Items[v].Display() + "\n"
+			}
 		}
-		fields = append(fields, &discordgo.MessageEmbedField{Name: "Weapons", Value: attackValue, Inline: false})
+		if attackValue != "run `attack #` to use a weapon\n" {
+			fields = append(fields, &discordgo.MessageEmbedField{Name: "Weapons", Value: attackValue, Inline: false})
+		}
 	}
 
 	// Send an embed containing all the fields
