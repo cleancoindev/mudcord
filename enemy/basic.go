@@ -3,6 +3,7 @@ package enemy
 var Slime = Enemy{
 	Name: "Slime",
 	Desc: "A green, slippery, ball of hate",
+	Flee: 10,
 	HP:   [2]int{10, 10},
 	MP:   [2]int{0, 0},
 	Attacks: []Attack{
@@ -20,6 +21,7 @@ var Slime = Enemy{
 var Zombie = Enemy{
 	Name: "Zombie",
 	Desc: "A decrepit, infected ghoul",
+	Flee: 20,
 	HP:   [2]int{15, 15},
 	MP:   [2]int{0, 0},
 	Attacks: []Attack{
